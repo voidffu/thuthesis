@@ -1,0 +1,81 @@
+<mxfile host="app.diagrams.net" modified="2024-03-20T08:30:00.000Z" agent="Mozilla/5.0" version="21.1.9">
+  <diagram id="hand_learning_system" name="交互式手语学习助手系统架构">
+    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" page="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- 顶层标题 -->
+        <mxCell id="title" value="交互式手语学习助手系统" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 三大核心模块容器 -->
+        <mxCell id="core_modules" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="720" height="300" as="geometry"/>
+        </mxCell>
+
+        <!-- 手语识别模块 -->
+        <mxCell id="recognition_module" value="手语识别模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#dae8fc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_1" value="RGB-D数据采集" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="recognition_module">
+          <mxGeometry y="30" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_2" value="MDSI特征提取" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="recognition_module">
+          <mxGeometry y="60" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_3" value="实时动作识别" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="recognition_module">
+          <mxGeometry y="90" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 手语生成模块 -->
+        <mxCell id="generation_module" value="手语生成模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_1" value="CoordSpeaker生成算法" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="generation_module">
+          <mxGeometry y="30" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_2" value="标准动作库管理" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="generation_module">
+          <mxGeometry y="60" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_3" value="动作平滑过渡" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="generation_module">
+          <mxGeometry y="90" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 交互反馈模块 -->
+        <mxCell id="feedback_module" value="交互反馈模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#ffe6cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="540" y="100" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_1" value="实时评估打分" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="feedback_module">
+          <mxGeometry y="30" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_2" value="改进建议生成" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="feedback_module">
+          <mxGeometry y="60" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_3" value="学习进度追踪" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="feedback_module">
+          <mxGeometry y="90" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 用户交互界面 -->
+        <mxCell id="ui_module" value="用户交互界面" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#fff2cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="60" y="250" width="680" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_components" value="学习模式 | 练习模式 | 评估反馈 | 进度管理" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="ui_module">
+          <mxGeometry y="30" width="680" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线 -->
+        <mxCell id="" value="" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="recognition_module" target="ui_module">
+          <mxGeometry width="50" height="50" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="" value="" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="generation_module" target="ui_module">
+          <mxGeometry width="50" height="50" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="" value="" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;" edge="1" parent="1" source="feedback_module" target="ui_module">
+          <mxGeometry width="50" height="50" relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile> 

@@ -1,0 +1,137 @@
+<mxfile host="app.diagrams.net" modified="2024-03-20T08:30:00.000Z" agent="Mozilla/5.0" version="21.1.9">
+  <diagram id="hand_learning_system" name="交互式手语学习助手系统架构">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- 顶层标题 -->
+        <mxCell id="title_cell" value="交互式手语学习助手系统" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="800" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 三大核心模块容器 -->
+        <mxCell id="core_modules_container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;dashed=1;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="200" y="100" width="1200" height="320" as="geometry"/>
+        </mxCell>
+
+        <!-- 手语识别模块 -->
+        <mxCell id="recognition_module_container" value="手语识别模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#dae8fc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#6c8ebf;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="240" y="130" width="320" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_item1" value="RGB-D数据采集" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="recognition_module_container">
+          <mxGeometry y="30" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_item2" value="MDSI特征提取" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="recognition_module_container">
+          <mxGeometry y="60" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="recognition_item3" value="实时动作识别" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="recognition_module_container">
+          <mxGeometry y="90" width="320" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 手语生成模块 -->
+        <mxCell id="generation_module_container" value="手语生成模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#d5e8d4;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#82b366;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="640" y="130" width="320" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_item1" value="CoordSpeaker生成算法" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="generation_module_container">
+          <mxGeometry y="30" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_item2" value="标准动作库管理" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="generation_module_container">
+          <mxGeometry y="60" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="generation_item3" value="动作平滑过渡" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="generation_module_container">
+          <mxGeometry y="90" width="320" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 交互反馈模块 -->
+        <mxCell id="feedback_module_container" value="交互反馈模块" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#ffe6cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#d79b00;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="130" width="320" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_item1" value="实时评估打分" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="feedback_module_container">
+          <mxGeometry y="30" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_item2" value="改进建议生成" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="feedback_module_container">
+          <mxGeometry y="60" width="320" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="feedback_item3" value="学习进度追踪" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rounded=1;" vertex="1" parent="feedback_module_container">
+          <mxGeometry y="90" width="320" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 用户界面模块 -->
+        <mxCell id="ui_container" value="用户交互界面" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#fff2cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#d6b656;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="200" y="280" width="1200" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- 主视图区 -->
+        <mxCell id="main_view" value="主视图区" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="ui_container">
+          <mxGeometry x="20" y="40" width="380" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="main_view_content" value="标准动作示范 | 用户实时动作" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="main_view">
+          <mxGeometry y="35" width="380" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 交互模式区 -->
+        <mxCell id="interaction_modes" value="交互模式区" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="ui_container">
+          <mxGeometry x="420" y="40" width="760" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="interaction_content" value="学习模式 | 练习模式 | 自由练习 | 评估反馈 | 进度管理" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="interaction_modes">
+          <mxGeometry y="35" width="760" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- 开发环境容器 -->
+        <mxCell id="env_container" value="开发环境" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#e1d5e7;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#9673a6;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="200" y="440" width="1200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="env_items" value="Python 3.8+ | PyQt5 | OpenCV | NumPy" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="env_container">
+          <mxGeometry y="30" width="1200" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 交互流程容器 -->
+        <mxCell id="flow_container" value="交互流程" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;fillColor=#f8cecc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;strokeColor=#b85450;rounded=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="200" y="540" width="1200" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- 学习模式流程 -->
+        <mxCell id="learn_mode" value="学习模式" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="flow_container">
+          <mxGeometry x="20" y="40" width="360" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="learn_flow" value="1. 展示标准手语动作&#xa;2. 开启摄像头练习&#xa;3. 实时动作评估&#xa;4. 获取评估反馈&#xa;5. 支持暂停/重复" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="learn_mode">
+          <mxGeometry y="40" width="360" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- 练习模式流程 -->
+        <mxCell id="practice_mode" value="练习模式" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="flow_container">
+          <mxGeometry x="420" y="40" width="360" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="practice_flow" value="1. 选择练习类别&#xa;2. 根据题目完成动作&#xa;3. 获取评分反馈&#xa;4. 查看标准示范&#xa;5. 记录练习成绩" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="practice_mode">
+          <mxGeometry y="40" width="360" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- 自由练习模式流程 -->
+        <mxCell id="free_mode" value="自由练习模式" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="flow_container">
+          <mxGeometry x="820" y="40" width="360" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="free_flow" value="1. 选择练习内容&#xa;2. 生成示范动作&#xa;3. 自主练习&#xa;4. 获取评估反馈&#xa;5. 记录练习进度" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=14;" vertex="1" parent="free_mode">
+          <mxGeometry y="40" width="360" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线和标签 -->
+        <mxCell id="arrow1" value="动作识别结果" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.2;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="recognition_module_container" target="ui_container">
+          <mxGeometry x="-0.3" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" value="标准动作示范" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="generation_module_container" target="ui_container">
+          <mxGeometry x="-0.3" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" value="评估反馈信息" style="endArrow=classic;html=1;rounded=1;exitX=0.5;exitY=1;entryX=0.8;entryY=0;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="feedback_module_container" target="ui_container">
+          <mxGeometry x="-0.3" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile> 

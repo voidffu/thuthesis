@@ -7,12 +7,12 @@ thuthesis*.zip
 thuthesis-ctan/
 
 ## generated files:
-dtx-style.sty
-thuthesis.cls
-thuthesis.pdf
-thuthesis-example.pdf
-spine.pdf
-*.hd
+# dtx-style.sty
+# thuthesis.cls
+# thuthesis.pdf
+# thuthesis-example.pdf
+# spine.pdf
+# *.hd
 
 ## test files:
 build/

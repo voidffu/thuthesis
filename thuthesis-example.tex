@@ -2,7 +2,7 @@
 % !TeX program = xelatex
 % !TeX spellcheck = en_US
 
-\documentclass[degree=master]{thuthesis}
+\documentclass[draft, degree=master,  degree-type=professional, fontset=mac]{thuthesis}
   % 学位 degree:
   %   doctor | master | bachelor | postdoc
   % 学位类型 degree-type:
@@ -41,20 +41,22 @@
 
 % 插图和附表清单
 % 本科生的插图索引和表格索引需要移至正文之后、参考文献前
-% \listoffiguresandtables  % 插图和附表清单（仅限研究生）
-\listoffigures           % 插图清单
-\listoftables            % 附表清单
+\listoffiguresandtables  % 插图和附表清单（仅限研究生）
+% \listoffigures           % 插图清单
+% \listoftables            % 附表清单
 
 % 符号对照表
-\input{data/denotation}
+% \input{data/denotation}
 
 
 % 正文部分
 \mainmatter
-\input{data/chap01}
-\input{data/chap02}
-\input{data/chap03}
-\input{data/chap04}
+\input{data/chap01}  % 研究背景
+\input{data/chap02}  % 国内外研究现状综述  
+\input{data/chap03}  % 多模态手势识别算法研究
+\input{data/chap04}  % 协同手势生成算法研究
+\input{data/xxxxxx}  % 交互式手语学习助手设计与实现
+\input{data/chap06}  % 总结与展望
 
 
 % 其他部分
@@ -69,7 +71,7 @@
 \appendix
 % \input{data/appendix-survey}       % 本科生：外文资料的调研阅读报告
 % \input{data/appendix-translation}  % 本科生：外文资料的书面翻译
-\input{data/appendix}
+% \input{data/appendix}
 
 % 致谢
 \input{data/acknowledgements}

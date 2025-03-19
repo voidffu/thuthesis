@@ -3,8 +3,10 @@
 % \chapter{研究方法}
 \chapter{基于多模态的动态手势识别算法研究}
 \label{sec:GR}
-针对动态手势识别中“信息冗余（IR）”和 “信息缺失（IA）”的挑战，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
+针对手语教学中的动作评估挑战，本章对基于多模态的动态手势识别算法进行了研究。
+为了解决动态手势识别中“信息冗余（IR）”和 “信息缺失（IA）”的问题，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
 为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (SIN)，它有两个关键组件：语义滤波器 (SF) 和语义标签平滑 (SLS)，以补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
+所提出的方法在 IsoGD 和 THU-READ 两个大规模基准数据集上取得了先进的识别性能，展现了其在实际应用中的潜力。
 %应用
 \begin{figure}[tb]
   \centering
@@ -216,7 +218,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 % \small
   \caption{与 IsoGD 数据集上最先进的方法的性能比较。最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
     \centering
-    \begin{tabular}{lccc}
+    \begin{tabular}{cccc}
     \toprule 
         {Modality} & {Backbone} &  {Methods}& {Accuracy(\%)} \\
      \midrule
@@ -231,7 +233,6 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         ~&~& UMDR (32 frame)~\cite{zhou2023unified} & \underline{63.68} \\ 
         ~&~& \textbf{Ours} & \textbf{68.32} \\ 
      \midrule
-     \midrule
         \multirow{9}*{Depth}& \multirow{5}*{CNN}  & ConvLSTMForGR~\cite{zhu2019redundancy} & 54.18 \\ 
         ~&~& NAS~\cite{yu2021searching} & 55.68 \\ 
         ~&~& RAAR3DNet~\cite{zhou2021regional} & 60.66 \\ 
@@ -242,7 +243,6 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         ~&~& MFST-Large~\cite{ma2023multi}& 61.29 \\ 
         ~&~& UMDR (32 frame)~\cite{zhou2023unified}& \underline{64.62} \\ 
         ~&~& \textbf{Ours} & \textbf{68.00} \\ 
-     \midrule
      \midrule
         \multirow{9}*{RGB-D}& \multirow{5}*{CNN}  &ConvLSTMForGR~\cite{zhu2019redundancy}& 61.05 \\ 
         ~&~& NAS~\cite{yu2021searching}& 65.54 \\ 
@@ -263,7 +263,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 % \small
   \caption{与 THU-READ 数据集上最先进的方法的性能比较。最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
     \centering
-    \begin{tabular}{lccc}
+    \begin{tabular}{cccc}
     \toprule 
         {Modality} & {Backbone} & {Methods} &  {Accuracy(\%)} \\
      \midrule
@@ -278,7 +278,6 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         ~&~&UMDR (32 frame)~\cite{zhou2023unified} & \underline{82.50} \\ 
         ~&~&\textbf{Ours} & \textbf{85.30}\\
      \midrule
-     \midrule
         \multirow{7}*{Depth}& \multirow{3}*{CNN} &VGG~\cite{simonyan2014very} &34.06 \\ 
         ~&~&TSN~\cite{wang2016temporal} &\underline{65.00} \\ 
         ~&~&\textbf{Ours} & \textbf{65.94} \\ 
@@ -287,7 +286,6 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         ~&~&Decouple+Recouple~\cite{zhou2022decoupling} &\underline{77.92}  \\ 
         ~&~&UMDR (32 frame)~\cite{zhou2023unified} &\textbf{79.59} \\ 
         ~&~&\textbf{Ours} & 74.87\\
-     \midrule
      \midrule
         \multirow{7}*{RGB-D}& \multirow{3}*{CNN} & SlowFast~\cite{feichtenhofer2019slowfast} & 76.25 \\ 
         ~&~&NAS~\cite{yu2021searching} & \underline{78.38} \\ 
@@ -306,7 +304,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 % \small
     \centering
   \caption{MDN 各个子分支的性能比较。“Trans.”表示 Transformer。}
-  \begin{tabular}{lc@{\hspace{3pt}}c@{\hspace{3pt}}c@{\hspace{3pt}}ccc}
+  \begin{tabular}{cc@{\hspace{3pt}}c@{\hspace{3pt}}c@{\hspace{3pt}}ccc}
     \toprule
        \multirow{2}*{Branches} & \multirow{2}*{$\text{RGB}^\textbf{G}$} &  \multirow{2}*{$\text{RGB}^\textbf{D}$} &  \multirow{2}*{$\text{Depth}^\textbf{G}$} &  \multirow{2}*{$\text{Depth}^\textbf{D}$}  & \multicolumn{2}{c}{Accuracy(\%)} \\
        ~ & ~ & ~ & ~ & ~ & MDSI-CNN & MDSI-Trans. \\
@@ -317,7 +315,6 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         (3) Ours-$\text{Depth}^\textbf{D}$ & \XSolidBrush & \XSolidBrush & \XSolidBrush & \Checkmark & 47.89 & 47.99\\
         (4) Ours-RGB & \Checkmark & \Checkmark & \XSolidBrush & \XSolidBrush & 72.58 & 68.32\\
         (5) Ours-Depth & \XSolidBrush & \XSolidBrush & \Checkmark & \Checkmark & 65.32 & 68.00\\
-    \midrule
         (6) Ours-RGB-D &  \Checkmark & \Checkmark & \Checkmark & \Checkmark & \textbf{75.09}& \textbf{74.73}\\ 
   \bottomrule
 \end{tabular}
@@ -327,19 +324,19 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \subsection{与最先进方法的比较}
 本文将本文的 MDSI 方法与 IsoGD 和 THU-READ 数据集上的其他最佳方法进行了比较。需要注意的是，这里报告了每种方法的最佳性能。
 
-\paragraph{IsoGD 上的性能}
+\textbf{IsoGD 上的性能。}
 表 \ref{tab:Iso SOTA} 显示了在 IsoGD 数据集上与最先进方法的性能比较。
 %
 本文的 MDSI-CNN 和 MDSI-Transformer 在所有当前方法中取得了最佳和第二好的性能，与最先进方法相比分别提高了 2.48\% 和 2.12\%，表明取得了显着的进步。除了在 RGB-D 融合结果中的强劲表现外，MDSI-CNN 和 MDSI-Transformer 在每个单一模态中也都排名前两位。
 具体而言，MDSI-CNN 在 RGB 数据中表现出色，超过 SOTA 9.11\%，而 MDSI-Transformer 在深度数据方面表现出色，超过 SOTA 3.38\%。
 这一额外的发现表明，不同类型的编码器可能对不同的数据模态具有不同的优势，这表明这是一个潜在的进一步探索领域。
 
-\paragraph{THU-READ 上的性能}
+\textbf{THU-READ 上的性能。}
 表 \ref{tab:THU SOTA} 展示了在 THU-READ 数据集上与最先进方法的性能比较。报告的结果是根据 \cite{tang2018multi} 在 CS 协议下对所有 4 个分割取平均值得出的。
 本文的 MDSI-Transformer 在所有方法中都实现了最先进的性能，在简单的分数融合下，RGB-D 结果的最高性能达到 89.36\%，凸显了 MDSI 的优势。
 同时，本文的 MDSI-CNN 在 RGB、深度和 RGB-D 模态上分别比现有的最佳 CNN 方法有显著的改进，分别提高了约 4.5\%、1\% 和 1\%，进一步验证了本文方法的有效性。
 
-\paragraph{讨论}
+\textbf{讨论。}
 总体而言，表 \ref{tab:Iso SOTA} 和 \ref{tab:THU SOTA} 中的结果证明了 MDSI 在不同主干设置中的稳健性，在两个数据集的两种配置下均实现了最先进的性能。虽然 MDSI 始终优于其他方法，但本文观察到某些偏差。具体而言，不同的编码器主干表现出对不同数据集的偏好：CNN 在 IsoGD 上表现最佳，而 Transformer 在 THU-READ 上表现出色。这可能归因于数据集特征的差异，例如自我中心与第三人称视角，或对超参数和预处理技术的敏感性（例如，高级姿势估计可能会进一步提高性能）。
 未来的工作将进一步探索这些偏差。
 
@@ -364,8 +361,8 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \begin{table*}
     \small
     \centering
-  \caption{THU-READ(CS4) 上 STCD 模块的消融研究。``Trans." 表示 Transformer。}
-  \begin{tabular}{lcc}
+  \caption{THU-READ(CS4) 上 STCD 模块的消融研究。“Trans.” 表示 Transformer。}
+  \begin{tabular}{ccc}
     \toprule
     \multirow{2}*{Variants} & \multicolumn{2}{c}{Accuracy (\%)} \\
     ~ & MDSI-CNN & MDSI-Trans. \\
@@ -381,16 +378,13 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
     \small
     \centering
   \caption{SIN 组件的消融研究：语义过滤器 (SF) 和语义标签平滑 (SLS)。 SF$_n$ 表示使用 $n$ 个语义过滤器混合一个视觉特征（SF$_0$ 表示视觉过滤器是随机初始化的，没有集成语义过滤器）。}
-  \begin{tabular}{lccccc}
+  \begin{tabular}{cccccc}
     \toprule
     {Variants}& {SLS} &{SF} &{FilterNum} & {Accuracy(\%)} \\
     \midrule
     Base Model & ~  & ~ & / & 67.93 \\
-    \midrule
     Ours-SLS &  \Checkmark  & ~ & / & 68.64 \\
-    \midrule
     Ours-SF&~ & \Checkmark &  1   & 68.65 \\
-    \midrule
     Ours-SF$_0$ &\multirow{4}*{\Checkmark} & \multirow{4}*{\Checkmark} & 0 & 68.41 \\
     Ours-SF$_1$ & ~ &~ & 1  & 68.79 \\
     Ours-SF$_b$ &~ & ~ &   16 & \underline{68.86} \\
@@ -431,10 +425,10 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
     \midrule
     \multirow{2}*{MDN} & \text{PMD} & 0 & 0 \\
     ~&\text{STCD} \quad & 0.50 & 0.33 \\
-    \midrule
+    \cmidrule(lr){2-4}
     \multirow{2}*{SIN} & \text{SF}\quad & 2.21 & 2.28 \\
     ~& \text{SLS}\quad & 0 & 0 \\
-    \midrule
+    \cmidrule(lr){2-4}
     \textbf{MDSI} & - & \textbf{2.69} & \textbf{2.61} \\
     \text{Backbone}& $\varepsilon$ \quad & 12.03 & 38.15 \\
     \text{Total} & - & 14.72 & 40.76 \\
@@ -485,10 +479,10 @@ MDSI带来的改进值得注意：i）对于遭受IR的样本类别，MDSI将准
 
 
 \section{本章小结}
-本章提出了一种可插拔的多模态动态手势识别算法，称为多策略解耦与语义集成（MDSI），旨在解决RGB-D手势识别中的信息冗余（IR）和信息缺失（IA）挑战。
+针对手语教学中的动作评估问题，本章提出了一种可插拔的多模态动态手势识别算法，称为多策略解耦与语义集成（MDSI），旨在解决RGB-D手势识别中的信息冗余（IR）和信息缺失（IA）挑战。
 首先，第~\ref{sec:MDN}节引入了多策略解耦网络（MDN），通过解耦"姿态-运动"和"时空-通道"特征来减轻冗余信息。
 随后，第~\ref{sec:SIN}节提出了语义集成网络（SIN），该网络通过语义过滤和标签平滑增强语义理解，有效地指导视觉相似手势的区分。
-MDSI的可插拔特性使其能够以最小的计算开销无缝集成到各种视频编码器架构中，展示了其在动作识别和手语识别等相关领域的扩展潜力。大量实验（第~\ref{sec:GR_EXP}节）表明，MDSI在两个广泛认可的基准测试中超越了先前的最先进方法。
+MDSI的可插拔特性使其能够以最小的计算开销无缝集成到各种视频编码器架构中，展示了其在动作识别和手语识别等相关领域的扩展潜力。大量实验（第~\ref{sec:GR_EXP}节）表明，MDSI在两个广泛认可的基准测试中超越了先前的最先进方法，展现了其在手语教学动作评估中的实际应用潜力。
 % 本文预计通过进一步改进MDSI和优化预处理将增强其实时部署能力。
 
 

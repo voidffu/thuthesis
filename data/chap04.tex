@@ -3,17 +3,18 @@
 % \chapter{研究方法}
 \chapter{基于手势描述的协同手势生成算法研究}
 \label{sec:GG} 
-本章将详细介绍一种描述驱动的协同手势生成框架（如图\ref{fig:teaser}所示）。
-首先，本文提出了一种统一的运动表示方法，将不同来源的运动数据嵌入到紧凑的潜在空间中（第\ref{sec:method:m_rep}节）。在此基础上，本文设计了一种可控的手势潜在扩散模型（第\ref{sec:method:gld}节），该模型包含两个关键组件：
+为了缓解手语教学中标准示范资源缺乏的问题，本章提出了一种描述驱动的协同手势生成框架（如图\ref{fig:teaser}所示）。
+首先，本文引入了一种统一的运动表示方法，将不同来源的运动数据嵌入到紧凑的潜在空间中（第\ref{sec:method:m_rep}节）。在此基础上，本文设计了一种可控的手势潜在扩散模型（第\ref{sec:method:gld}节），该模型包含两个关键组件：
 (1) 一个手势变分自编码器，用于学习手势的低维潜在表示；
 (2) 一个在该潜在空间中高效运行的分层条件扩散模型。
 为了实现语义和节奏的协同精确控制，本文提出了一种手势描述框架（第\ref{sec:method:caption}节），该框架利用运动-语言模型为手势数据生成描述性文本标注，填补了手势数据描述性文本标注的空白。
 此外，本文还设计了一种多粒度描述控制机制（第\ref{sec:method:control}节）以确保精确的语义注入。
+大量实验表明，所提出的方法能够有效生成高质量、语义一致、节奏同步的手势，为手语示范动作的扩充生成提供了有力支持。
 
 \begin{figure*}[!h]
   \centering
   \includegraphics[width=\linewidth]{teaser.png}
-  \caption{\textbf{CoordSpeaker} 支持 \textit{手势字幕} 和定制的 \textit{协同的说话者动作生成}，既能与字幕保持语义一致，又能与音频保持节奏同步。例如，在演讲场景中，本文的方法允许说话者在讲话时自然地向前走并鞠躬，无缝地做出结束手势。} %Our method generates natural speaking gestures synchronized with speech and text captions. Given speech and text prompts (such as ``sitting'', ``waving while talking'', etc.), our model produces coordinated gesture motions that align with both speech rhythm and textual semantics. The figure above demonstrates gesture examples generated under the same speech with different text prompts.}
+  \caption{\textbf{CoordSpeaker} 支持手势字幕和定制的协同的说话者动作生成，既能与字幕保持语义一致，又能与音频保持节奏同步。例如，在演讲场景中，本文的方法允许说话者在讲话时自然地向前走并鞠躬，无缝地做出结束手势。} %Our method generates natural speaking gestures synchronized with speech and text captions. Given speech and text prompts (such as ``sitting'', ``waving while talking'', etc.), our model produces coordinated gesture motions that align with both speech rhythm and textual semantics. The figure above demonstrates gesture examples generated under the same speech with different text prompts.}
   \label{fig:teaser}
 \end{figure*}
 
@@ -33,7 +34,7 @@
 
 
 \subsection{潜在表示}
-近期研究表明，潜在表示在神经运动建模中发挥着关键作用[]。
+近期研究表明，潜在表示在神经运动建模中发挥着关键作用。
 本文采用基于Transformer的VAE模型将运动序列编码到紧凑且信息丰富的潜在空间中，该模型由编码器$\mathcal{E}$和解码器$\mathcal{D}$组成，并通过长跳跃连接来保持运动细节。
 具体而言，运动序列$x^{1:L}$首先通过编码器$\mathcal{E}$编码为潜在向量$z \in \mathbb{R}^{n\times d}$，其中$d$表示潜在维度。编码器接收逐帧运动特征和可学习的分布令牌作为输入，生成运动潜在空间的高斯分布参数$\mu$和$\sigma$。这些参数通过标准VAE采样过程重参数化得到潜在向量。
 对于运动解码，$\mathcal{D}$采用带有交叉注意力机制的Transformer架构。它以零运动令牌作为查询，潜在向量$z$作为键和值，生成重建的运动序列$\hat{x}^{1:L}$。整个VAE通过均方误差（MSE）和Kullback-Leibler（KL）散度的组合进行训练：
@@ -107,10 +108,10 @@ L_{\text{VAE}} = \|x^{1:L} - \hat{x}^{1:L}\|_2^2 + \beta \text{KL}(q_{\phi}(z|x^
 
 \section{手势描述}
 \label{sec:method:caption}
-手势数据缺乏描述性文本标注显著限制了通过文本提示控制手势合成的能力~\cite{chen2024syntalker}。为了解决这个问题，本文提出了一种新颖的\textit{手势描述}方法，利用运动-语言模型为手势生成描述性标注。这种方法为手势数据集的语义标注稀缺问题提供了一个高效的解决方案，同时通过生成的描述实现精细的语义控制（详见第\ref{sec:method:control}节）。
+手势数据缺乏描述性文本标注显著限制了通过文本提示控制手势合成的能力~\cite{chen2024syntalker}。为了解决这个问题，本文提出了一种新颖的\textit{手势描述}方法，利用运动-语言模型为手势生成描述性标注。该方法为手势数据集的语义标注稀缺问题提供了一个高效的解决方案，同时通过生成的描述实现精细的语义控制（详见第\ref{sec:method:control}节）。
 
 本文的手势描述框架（图\ref{fig:method:captioning}）包含两个主要组件：\textit{运动分词器}和\textit{运动感知语言模型（MotionLLM）}。
-运动分词器基于~\cite{}中使用的VQ-VAE架构，由编码器$\mathcal{E_M}$和解码器$\mathcal{D_M}$组成，用于生成离散的运动令牌。
+运动分词器基于~\cite{guo2022tm2t,zhang2023t2mgpt}中使用的VQ-VAE架构，由编码器$\mathcal{E_M}$和解码器$\mathcal{D_M}$组成，用于生成离散的运动令牌。
 运动感知语言模型采用基于Transformer的架构，具有统一的文本-运动词表$\mathbf{V} = \{\mathbf{V_t}, \mathbf{V_m}\}$，使其能够在单个模型中灵活地联合建模文本和运动。
 具体而言，手势序列首先转换为第\ref{sec:method:m_rep:unified}节中描述的统一运动表示，然后输入本文的手势描述框架。
 给定一个包含M帧的手势运动序列$m^{1:M}=\{x^i\}^M_{i=1}$，运动分词器首先将其编码和量化为离散的运动令牌序列$z^{1:L}=\{z^i\}^L_{i=1}$。精心设计的\textit{提示模板}被分词为文本令牌$w^{1:N}=\{w^i\}^N_{i=1}$。随后，离散运动令牌和文本令牌被混合并共同输入运动感知语言模型，生成相应的手势描述$\hat{w}^{1:L}=\{w^i\}^L_{i=1}$。
@@ -118,9 +119,8 @@ L_{\text{VAE}} = \|x^{1:L} - \hat{x}^{1:L}\|_2^2 + \beta \text{KL}(q_{\phi}(z|x^
 % TODO：可放补充材料
 % 受限于MotionGPT所使用的人体运动数据集的格式，首先需要将手势表示转换为22关节的HumanML3D格式，然后输入到MotionGPT中生成描述。
 
-\paragraph{实现细节}
+\textbf{实现细节。}
 表~\ref{tab:prompt_templates}展示了本文的手势描述框架中使用的提示模板集合。这些经过精心设计的模板会被多次随机采样，并与不同的手势片段配对以生成多样化的手势描述。这些模板的设计受到了最新运动-语言建模研究的启发~\cite{jiang2024motiongpt}。
-
 此外，由于本文使用的MotionLLM是在22个关节点的人体运动数据集上预训练的，在进行描述生成推理之前，本文需要先将手势特征从$x\in \mathbb{R}^{T\times 659}$转换为$\mathbb{R}^{T\times 263}$的相似格式，这是通过仅保留前22个关节点的数据来实现的。这种转换不可避免地会导致一些细微的手指动作细节丢失。如果能有一个包含明确手指动作标注的更精细数据集，将能显著缓解这一局限性。
 
 \begin{table*}[t]
@@ -175,23 +175,22 @@ Task & Input & Output \\
 (4) \textbf{消融研究}。分析本文方法中关键组件的影响。
 
 \subsection{实验设置}
-\paragraph{数据集}
+\textbf{数据集。}
 本文利用语音到手势数据集BEAT~\cite{liu2022beat}和文本到运动数据集HumanML3D~\cite{guo2022humanml3d}进行训练。这种跨数据集学习策略使本文能够引入额外的语义运动先验。
 HumanML3D数据集包含14,616个基础运动序列和44,970个对应的文本描述，为运动生成任务提供了丰富的语义先验。
 BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖了多样化的手势类型和说话场景，为语音驱动的手势生成提供了重要支持。
 参照~\cite{liu2022beat}，本文使用四位英语演讲者的手势数据。
 
-\paragraph{评估指标}
+\textbf{评估指标。}
 本文从三个方面评估生成结果：
 (1) 重建质量：使用抖动度和加速度指标~\cite{kucherenko2019analyzing}评估动作的平滑度和自然度。
 (2) 语音到手势生成：使用FGD~\cite{yoon2020speech}评估身体手势的真实性。通过计算不同手势片段间的平均L1距离评估多样性~\cite{liu2024emage}，使用BC评估语音与动作的同步性。
 (3) 文本到运动生成：使用Frechet Inception Distance (FID)和Diversity (DIV)评估生成运动的真实性和多样性，使用motion-retrieval precision (R Precision)和Multi-modal Distance (MM Dist)评估运动与文本描述的匹配程度~\cite{chen2023executing}。
 
-\paragraph{实现细节}
+\textbf{实现细节。}
 本文基于 Transformer 的 VAE 和降噪器 $\epsilon_\theta$ 均由编码器 $E$ 和解码器 $D$ 组成，每个包含 9 层和 4 个注意力头，具有 GELU 激活和残差连接。潜在维度设置为 $z \in \mathbb{R}^{1 \times 512}$。语义和音频嵌入都通过线性层投影到 512 维空间中，然后输入到降噪器中。
 对于训练，本文使用 AdamW 优化器，学习率为 $1e^{-4}$，批处理大小为 128。VAE 训练了 6000 个 epoch，而扩散模型训练了 2000 个 epoch。在训练过程中，本文使用 1000 个扩散步骤和 50 个推理步骤，噪声方差 $\beta_t$ 从 $8.5 \times 10^{-4}$ 线性缩放到 0.012。在 VAE 阶段，KL 损失权重 $\beta$ 设置为 0.0001（式~\eqref{eq:loss_vae}）。
 在推理过程中，对于无分类器指导，音频和字幕指导比例默认设置为 $s_1=7$ 和 $s_2=1$，以平衡不同的条件贡献。
-
 为平衡训练过程中不同数据集的数据分布，本文对数据加载器采用加权随机采样策略。
 参照~\cite{yang2024freetalker}，所有运动序列重采样至20 FPS，并截断或填充至180帧。对于HumanML3D数据集，仅使用长度在40至180帧之间的序列。
 
@@ -219,11 +218,12 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 % 主结果
 \begin{table*}[t]
   \centering
+  \setlength{\tabcolsep}{2pt}  % 添加这一行
   \caption{与基线模型和消融研究进行比较的定量结果。`$\rightarrow$' 表示越接近真实运动越好。每个指标均在 20 次运行的 95\% 置信区间下报告。本文报告 BC $\times 10^{-1}$ 和 Top-1 R-Precision。}
     % \small
     \footnotesize
     \label{tab:main_results}
-    \begin{tabular}{l c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c}
+    \begin{tabular}{c c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c}
     \toprule
     \multirow{3}{*}{Methods} & \multicolumn{2}{c}{Reconstruction} & \multicolumn{3}{c}{Audio-to-Gesture} & \multicolumn{4}{c}{Text-to-Motion} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-10}
@@ -232,7 +232,6 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
     GT & $1.165^{\pm .000}$ & $0.043^{\pm .000}$ & - & - & - & - & $6.205^{\pm .043}$ & $5.512^{\pm .114}$ & $0.140^{\pm .008}$ \\
     Freetalker~\cite{yang2024freetalker} & $0.611^{\pm .013}$ & $0.030^{\pm .000}$ & $2.101^{\pm .026}$ & $1.147^{\pm .028}$ & $11.332^{\pm .025}$ & $0.761^{\pm .048}$ & $6.737^{\pm .051}$ & $5.396^{\pm .127}$ & $0.102^{\pm .008}$ \\
     Ours  & $1.190^{\pm .015}$ & $0.039^{\pm .001}$ & $3.173^{\pm .123}$ & $1.327^{\pm .049}$ & $10.861^{\pm .066}$ & $1.118^{\pm .061}$ & $6.814^{\pm .056}$ & $5.558^{\pm .126}$ & $0.100^{\pm .008}$ \\
-    \midrule
     Ours-w/o mo. & $1.005^{\pm .014}$ & $0.032^{\pm .000}$ & $2.654^{\pm .041}$ & $2.627^{\pm .043}$ & $19.600^{\pm .089}$ & $3.911^{\pm .163}$ & $7.664^{\pm .050}$ & $4.070^{\pm .117}$ & $0.043^{\pm .004}$ \\
     % Ours-w/o cap. & $1.181^{\pm .011}$ & $0.039^{\pm .000}$ & $2.224^{\pm .074}$ & $2.330^{\pm .060}$ & $12.652^{\pm .109}$ & $1.041^{\pm .042}$ & $6.788^{\pm .056}$ & $5.414^{\pm .133}$ & $0.095^{\pm .008}$ \\
     Ours-w/o hcd.   & $1.201^{\pm .017}$ & $0.038^{\pm .001}$ & $2.302^{\pm .061}$ & $1.910^{\pm .004}$ & $12.781^{\pm .044}$ & $1.260^{\pm .063}$ & $6.872^{\pm .058}$ & $5.303^{\pm .107}$ & $0.102^{\pm .010}$ \\
@@ -254,7 +253,7 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
   \caption{与 HumanML3D~\cite{guo2022humanml3d} 测试集上的最新方法进行比较。本文按照 \cite{chen2023executing} 计算标准度量。`$\rightarrow$' 表示越接近真实运动越好。每个度量均在 20 次运行的 95\% 置信区间下报告。}
   \label{tab:h3d_results}
   \small
-  \begin{tabular}{l cccccc}
+  \begin{tabular}{c cccccc}
   \toprule
   \multirow{2}{*}{Methods} & \multirow{2}{*}{FID$\downarrow$} & \multirow{2}{*}{MM-Dist$\downarrow$} & \multirow{2}{*}{Div$\rightarrow$} & \multicolumn{3}{c}{R-Precision$\uparrow$} \\
   \cmidrule(lr){5-7}
@@ -266,7 +265,6 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
   MLD~\cite{chen2023executing} & $0.963^{\pm .029}$ & $3.898^{\pm .012}$ & $10.401^{\pm .096}$ & $0.429^{\pm .003}$ & $0.613^{\pm .003}$ & $0.717^{\pm .002}$ \\
   MoMask~\cite{guo2024momask} & $0.222^{\pm .007}$ & $3.620^{\pm .011}$ & $10.621^{\pm .096}$ & $0.461^{\pm .002}$ & $0.657^{\pm .003}$ & $0.760^{\pm .002}$ \\
   SynTalker~\cite{chen2024syntalker} & $4.385^{\pm .034}$ & $4.499^{\pm .012}$ & $9.374^{\pm .073}$ & $0.375^{\pm .003}$ & $0.564^{\pm .003}$ & $0.681^{\pm .002}$ \\
-  \midrule
   % Ours (w/o mo.rep.) & & & & & \\
   % Ours (w/o cap.)  & & & & &  \\
   % Ours  & $0.540^{\pm .013}$ & $6.833^{\pm .013}$ & $5.672^{\pm .154}$ & $0.104^{\pm .001}$ & $0.191^{\pm .002}$ & $0.270^{\pm .002}$ \\
@@ -298,7 +296,7 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\linewidth]{ablation.png}
-    \caption{定性消融研究。结果是使用语音音频和单字幕 \textit{``A person is raising both hands up while talking''} 生成的。}
+    \caption{定性消融研究。结果是使用语音音频和单字幕（“A person is raising both hands up while talking”）生成的。}
     \label{fig:ablation}
 \end{figure}
 
@@ -308,39 +306,38 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 定量结果如表~\ref{tab:main_results} 所示，定性结果如图~\ref{fig:ablation} 所示。本文使用音频和单个字幕条件 (\textit{``A person is raising both hands up while talking''}) 进行了定性评估。
 如图~\ref{fig:ablation}(a) 所示，本文的完整模型有效地捕捉了音频节奏和语义指令，生成自发的语音手势，同时遵循字幕指导产生非自发的手势（向上举起双手）。
 
-\paragraph{手势描述}
+\textbf{手势描述。}
 图~\ref{fig:ablation}(b)展示了移除手势描述后的影响。没有描述的语义指导，模型只能生成与语音同步的基本协同手势，无法产生有意义的非自发运动。
 这表明手势描述在提供语义指导和补充缺失的手势文本标注方面发挥着关键作用。
 
-\paragraph{统一运动表示}
+\textbf{统一运动表示。}
 移除统一的运动表征（图\ref{fig:ablation}(c)）显著限制了模型生成除典型同语动作之外的多样且语义上有意义的手势的能力。虽然细微的向上手部动作仍然存在，但说话者未能完全执行标题中描述的举起双手的预期手势。
 表~\ref{tab:main_results}（\textit{Ours-w/o mo.}）中的定量结果进一步证实了这种退化，显示语义相关性大幅下降，反映在明显更差的 FID（$2.793\uparrow$）、MM-Dist（$0.850\uparrow$）和 R-Precision（Top-1 $0.057\uparrow$）中。
 
-\paragraph{分层控制降噪器} % [定量] 包括denoiser设计，condition集成方式
+\textbf{分层控制降噪器。} % [定量] 包括denoiser设计，condition集成方式
 如表~\ref{tab:main_results}所示，删除分层控制的降噪器（\textit{Ours-w/o hcd.}）会导致重建质量下降（Jerk $0.011\uparrow$）和条件协同性减弱。具体而言，该模型表现出更强的偏向于重建同语手势（BC $0.583\uparrow$），同时无法保持语义相关性（MM-Dist $0.058\uparrow$）。这些发现强调了本文的分层控制降噪器在确保有效的多模态条件协同方面的关键作用。
 
-\paragraph{多粒度字幕}
+\textbf{多粒度字幕。}
 如表~\ref{tab:main_results} 所示，删除多粒度字幕（\textit{Ours-w/o mgc.}）会导致生成的手势的语义相关性显著下降。这凸显了本文的多粒度字幕机制在促进精确和上下文感知的语义注入方面的重要性。在这种情况下，音频作为初始条件，而本地字幕提供精细条件。
 
-\paragraph{多模态无分类器指导}
+\textbf{多模态无分类器指导。}
 图~\ref{fig:ablation}(d)展示了仅对文本模态应用无分类器指导的效果。
 由于训练时缺乏语音模态的无条件指导，模型在推理时难以融合多模态信号，过度依赖语音输入，导致手势多样性有限且语义对齐性差。
 这些发现突显了组合多模态指导在实现平衡手势生成中的重要性，有助于整合语音节奏和语义约束。
 
 \begin{table*}[t]
     \centering
-    \caption{多粒度字幕策略的消融研究。``Reg.'' 表示常规字幕策略，``Dyn.'' 表示动态字幕策略，``Hie.'' 表示分层字幕策略。
+    \caption{多粒度字幕策略的消融研究。“Reg.” 表示常规字幕策略，“Dyn.” 表示动态字幕策略，“Hie.” 表示分层字幕策略。
     每个指标均在 20 次运行的 95\% 置信区间下报告。本文报告 BC $\times 10^{-1}$ 和 Top-1 R-Precision。}
     \footnotesize
     \label{tab:ablation}
-    \begin{tabular}{l c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c}
+    \begin{tabular}{c c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c@{\hspace{3pt}} c}
     \toprule
     \multirow{3}{*}{Methods} & \multicolumn{2}{c}{Reconstruction} & \multicolumn{3}{c}{Audio-to-Gesture} & \multicolumn{4}{c}{Text-to-Motion} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-10}
     & Jerk$\rightarrow$ & Accel.$\rightarrow$ & FGD$\downarrow$ & BC$\uparrow$ & L1Div$\uparrow$ & FID$\downarrow$ & MM-Dist$\downarrow$ & Div$\rightarrow$ & R-Precision$\uparrow$ \\
     \midrule
     GT & $1.165^{\pm .000}$ & $0.043^{\pm .000}$ & - & - & - & - & $6.205^{\pm .043}$ & $5.512^{\pm .114}$ & $0.140^{\pm .008}$  \\
-    \midrule
     Ours-Reg.  & $1.201^{\pm .017}$ & $0.038^{\pm .001}$ & $2.302^{\pm .061}$ & $1.910^{\pm .004}$ & $12.781^{\pm .044}$ & $1.260^{\pm .063}$ & $6.872^{\pm .058}$ & $5.303^{\pm .107}$ & $0.102^{\pm .010}$  \\
     Ours-Dyn.  & $1.189^{\pm .013}$ & $0.038^{\pm .000}$ & $2.866^{\pm .106}$ & $1.943^{\pm .037}$ & $14.471^{\pm .110}$ & $1.404^{\pm .049}$ & $6.955^{\pm .044}$ & $5.440^{\pm .114}$ & $0.095^{\pm .006}$  \\
     Ours-Hie.  & $1.190^{\pm .015}$ & $0.039^{\pm .001}$ & $3.173^{\pm .123}$ & $1.327^{\pm .049}$ & $10.861^{\pm .066}$ & $1.118^{\pm .061}$ & $6.814^{\pm .056}$ & $5.558^{\pm .126}$ & $0.100^{\pm .008}$ \\
@@ -348,25 +345,25 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
     \end{tabular}
 \end{table*}
 
-\paragraph{多粒度描述控制}
+\textbf{多粒度描述控制。}
 表~\ref{tab:ablation}进一步展示了本文方法在不同粒度描述控制策略下的性能。
 分层控制策略(分层控制)在所有指标上实现了最优平衡：与常规和动态控制策略相比，它表现出更好的语义相关性(MM-Dist更低，$6.814$ vs $6.872$和$6.955$)、更好的运动质量(FID降低11.3\%和25.6\%)，同时有效维持了语音同步性和运动多样性。
 此外，动态策略在协同手势同步性(BC: $1.943$)和多样性(L1Div: $14.471$)方面表现出优势，这可能归因于其自适应采样机制增强了训练数据的多样性，使模型能够产生更丰富的节奏手势模式。
 这些综合结果表明，本文的多粒度描述控制策略有效协同了多模态信号，在运动自然度、语音同步性和语义对齐性之间实现了平衡的权衡。分层控制策略在细粒度语义注入方面表现尤为出色，导致生成手势具有更强的语义相关性。
 
-\paragraph{推理时间}
+\textbf{推理时间。}
 尽管扩散模型表现出色，但其较长的推理时间仍是主要瓶颈。
 为评估推理效率，本文在单个NVIDIA RTX 3090 GPU上测量每句平均推理时间(AITS)~\cite{chen2023executing}，批量大小设为1，不包括模型加载时间。
 结果显示本文的方法实现了 $0.842^{\pm .002}$ 秒的AITS，比FreeTalker~\cite{yang2024freetalker} ($6.632^{\pm .044}$s) 和 SynTalker~\cite{chen2024syntalker} ($5.804^{\pm .044}$s) 快6倍以上。
 这种显著的加速可以归因于本文高效的分层去噪架构和优化的潜在扩散过程，使本文的方法更适合实际应用。
 
 \subsection{更多可视化结果}
-\paragraph{更多协同生成结果}
+\textbf{更多协同生成结果。}
 如图~\ref{fig:vis_supply}所示，本文使用相同的音频和不同的文本标题提供了更加协同的生成结果。
 这些结果进一步证实了本文提出的方法在联合语音字幕控制下生成协同语音自发手势和字幕驱动的非自发运动的有效性。
 
 % 更多手势字幕结果
-\paragraph{更多手势字幕结果}
+\textbf{更多手势字幕结果。}
 本文在图~\ref{fig:vis_caption_supply}中展示了额外的手势字幕结果，进一步证明了本文的方法在准确地将手势映射到文本方面的有效性。
 正如彩色框中突出显示的那样，该模型在描述复杂、连续的动作时成功捕捉了细粒度的手部动作和粗粒度的全身动作。
 
@@ -386,10 +383,10 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 
 
 \section{本章小结}
-本章提出了一种基于描述驱动的协同手势生成框架（CoordSpeaker），旨在解决手势生成中的语义标注缺失和多模态协同控制挑战。
+针对手语教学中标准示范资源缺乏的问题，本章提出了一种基于描述驱动的协同手势生成框架（CoordSpeaker），旨在解决手势生成中的语义标注缺失和多模态协同控制挑战。
 首先，第~\ref{sec:method:m_rep}节引入了统一的运动表示方法，通过将不同来源的运动数据映射到紧凑的潜在空间，为跨数据集手势生成奠定基础。
 随后，第~\ref{sec:method:gld}节提出了可控手势潜在扩散模型，该模型通过手势VAE学习紧凑的潜在表示，并利用分层条件扩散模型实现高效的多模态条件生成。
 为了解决手势数据缺乏描述性文本标注的问题，第~\ref{sec:method:caption}节设计了一个手势描述框架，利用动作-语言模型为手势数据生成语义标注。
 第~\ref{sec:method:control}节提出的多粒度描述控制机制进一步增强了对生成过程的精确控制。
 最后，第~\ref{sec:experiments}节通过大量定性与定量实验验证了本文方法的有效性。
-大量实验表明，本文方法不仅能生成语义连贯、节奏同步的协同手势动作，而且在推理效率上相比现有方法提升了6倍以上，展现了在实际应用中的潜力。
+大量实验表明，本文方法不仅能生成语义连贯、节奏同步的协同手势动作，而且在推理效率上相比现有方法提升了6倍以上，为手语标准示范动作库的扩充奠定了坚实基础。

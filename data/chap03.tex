@@ -49,8 +49,7 @@
 
 本文利用提取的骨架数据将原始视频 $\mathbf{V}$ 分解为手部姿势 $\mathbf{h}$ 和手部运动 $\mathbf{m}$。
 首先，给定第 $i$ 帧的骨架数据 ($i \in 0, 1, ..., T$)，本文分别过滤每只手的 22 个关键点并描绘出最小手部边界框。
-随后，裁剪缩放后的边界框（比例=1.2）以获得表示细粒度姿势 $\mathbf{h}^{i}$ 的裁剪手部图像。为了公式化粗粒度运动向量$\mathbf{m}^{i} \in \mathbb{R}^{8}$，本文将边界框的 8 个位置属性堆叠如下：$\mathbf{m}^{i} = \left[e^{i}, x^{i}_{min}, y^{i}_{min}, x^{i}_{max}, y^{i}_{max}, w^{i}, h^{i}, r^{i}\right]^{\top}$，其中 $e^{i} \in \{0, 1\}$ 表示相应的手是否出现在第 $i$ 帧%(参见 Eq.~\ref{eq:e})
-，$\{x^{i}_{min}, y^{i}_{min}\}$ 和 $\{x^{i}_{max}， y^{i}_{max}\}$ 为边界框左上角和右下角顶点的坐标，$w^{i}, h^{i}$ 分别对应宽和高，$r^{i}=w^{i}/h^{i}$ 表示长宽比。
+随后，裁剪缩放后的边界框（比例=1.2）以获得表示细粒度姿势 $\mathbf{h}^{i}$ 的裁剪手部图像。为了公式化粗粒度运动向量$\mathbf{m}^{i} \in \mathbb{R}^{8}$，本文将边界框的 8 个位置属性堆叠如下：$\mathbf{m}^{i} = \left[e^{i}, x^{i}_{min}, y^{i}_{min}, x^{i}_{max}, y^{i}_{max}, w^{i}, h^{i}, r^{i}\right]^{\top}$，其中 $e^{i} \in \{0, 1\}$ 表示相应的手是否出现在第 $i$ 帧，$\{x^{i}_{min}, y^{i}_{min}\}$ 和 $\{x^{i}_{max}， y^{i}_{max}\}$ 为边界框左上角和右下角顶点的坐标，$w^{i}, h^{i}$ 分别对应宽和高，$r^{i}=w^{i}/h^{i}$ 表示长宽比。
 为了区分左右手，上述操作分别在每只手上独立执行，然后连接起来，得到最终的解耦特征：$\mathbf{h}^{i} = \left[\mathbf{h}^{i}_l, \mathbf{h}^{i}_r\right]$，$\mathbf{m}^{i} = \left[\mathbf{m}^{i}_l, \mathbf{m}^{i}_r\right]$。
 具体来说，$\mathbf{h}$ 和 $\mathbf{m}$ 分别在宽度方向和通道方向连接。
 
@@ -117,7 +116,7 @@ STCD 的结果输出 ${f}_{out}$ 可以表示如下：$\mathbf{f}_{out} = \mathb
 
 本文引入一个线性\emph{Filter Learner}（图~\ref{fig:SIN}）来导出语义滤波器。
 设语义滤波器的数量为$n$，以相应的$n$个语义嵌入$\mathbf{f}_{s} \in \mathbb{R}^{n\times 1024}$为输入，通过线性映射输出语义滤波器参数$\mathbf{f'}_{s}\in \mathbb{R}^{n\times N_p}$，然后将这些参数重塑为$n$个语义滤波器$\boldsymbol{\Theta}_{s}\in \mathbb{R}^{n\times c\times k^{d_k}}$，其中每个滤波器$\boldsymbol{\Theta}_{s}^i$代表一个卷积核。
-第 $i$ 个滤波器 $\boldsymbol{\Theta}_{s}^i$ 的参数数量定义为：$N_p=c\times k^{d_k}$，其中 $c$ 表示视觉特征 $\mathbf{f}_{v}$ 的输入通道（Eq.\ref{eq:fv}），$k$ 表示滤波器核大小（经验上设置为 3），$d_k$ 表示卷积维数（例如，对于 3d 卷积核，设置 $d_k=3$）。
+第 $i$ 个滤波器 $\boldsymbol{\Theta}_{s}^i$ 的参数数量定义为：$N_p=c\times k^{d_k}$，其中 $c$ 表示视觉特征 $\mathbf{f}_{v}$ 的输入通道（式\eqref{eq:fv}），$k$ 表示滤波器核大小（经验上设置为 3），$d_k$ 表示卷积维数（例如，对于 3d 卷积核，设置 $d_k=3$）。
 
 随后，本文将每个 $\boldsymbol{\Theta}_{s}^i$（对应第 $a$ 个手势类别）作为过滤核，将视觉特征 $\mathbf{f}_{v}$（对应第 $b$ 个手势类别）作为输入，执行深度卷积。得到的每个混合语义特征 $\mathbf{f}_{SF}^i$ 可以表示为：
 \begin{equation}
@@ -169,7 +168,7 @@ Loss = w_{s} \times L_{s} + w_{v} \times L_{v}.
 \label{eq:overall_loss}
 \end{equation}
 %
-请注意，本文仅将 SIN 网络应用于每个全局视觉特征 $f_v^G$ (Eq.~\ref{eq:fv})，以确保视觉特征和语义特征之间交互的完整性。
+请注意，本文仅将 SIN 网络应用于每个全局视觉特征 $f_v^G$ (式~\eqref{eq:fv})，以确保视觉特征和语义特征之间交互的完整性。
 因此，本文采用常用的分数融合方法来结合每个分支和模态的预测。
 
 \section{实验结果与分析}
@@ -311,7 +310,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
     \toprule
        \multirow{2}*{Branches} & \multirow{2}*{$\text{RGB}^\textbf{G}$} &  \multirow{2}*{$\text{RGB}^\textbf{D}$} &  \multirow{2}*{$\text{Depth}^\textbf{G}$} &  \multirow{2}*{$\text{Depth}^\textbf{D}$}  & \multicolumn{2}{c}{Accuracy(\%)} \\
        ~ & ~ & ~ & ~ & ~ & MDSI-CNN & MDSI-Trans. \\
-    \toprule
+    \midrule
         (0) Ours-$\text{RGB}^\textbf{G}$ & \Checkmark & \XSolidBrush & \XSolidBrush & \XSolidBrush & 68.93 & 65.79 \\
         (1) Ours-$\text{RGB}^\textbf{D}$ & \XSolidBrush & \Checkmark & \XSolidBrush & \XSolidBrush & 50.47 & 51.75 \\
         (2) Ours-$\text{Depth}^\textbf{G}$ & \XSolidBrush & \XSolidBrush & \Checkmark & \XSolidBrush & 61.34 & 66.01\\
@@ -360,7 +359,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 集成 STCD 的模型分别比基础 MDSI-CNN 和 MDSI-Transformer 模型实现了 4.17\% 和 2.16\% 的改进，
 这反映了时空通道解耦纠缠特征有助于学习判别信息。
 值得注意的是，本文的 STCD 模块既可插入又轻量级，参数最小增加 0.5M（表~\ref{tab:params_new}）。
-为了减轻额外信息的干扰，本研究未启用 SIN。
+为了减轻额外信息的干扰，本文未启用 SIN。
 
 \begin{table*}
     \small
@@ -569,4 +568,4 @@ MDSI的可插拔特性使其能够以最小的计算开销无缝集成到各种�
 % \end{figure}
 
 % \subsubsection{解耦手势数据处理}
-% 本研究使用HRNet\cite{sun2019deep}在上述数据集上事先提取并保存二维骨架数据（如图\ref{fig:8b}），随后进行手势解耦。目前，本文已经完成了Jester数据集上的解耦手势数据处理，后续将基于此开展解耦识别网络实验。
+% 本文使用HRNet\cite{sun2019deep}在上述数据集上事先提取并保存二维骨架数据（如图\ref{fig:8b}），随后进行手势解耦。目前，本文已经完成了Jester数据集上的解耦手势数据处理，后续将基于此开展解耦识别网络实验。

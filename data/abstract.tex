@@ -7,9 +7,9 @@
   手语作为听障人士的重要交流媒介，其学习与普及对促进社会包容具有重要意义。然而，当前标准手语的推广面临着学习难度较高、优质教学资源匮乏，缺乏有效的学习评估机制等挑战。近年来，手势驱动的人工智能技术取得了显著的进展\cite{伍杰2019基于视觉的实时手势识别方法研究, desai2017human,strickland2013using}，为解决手语辅助教学问题开辟了新可能。但目前此类系统仍面临两大挑战：(1) 手语动作评估的准确性与实时性难以保证；(2) 高质量的手语标准示范资源不足。
   针对上述问题，本文基于深度学习技术，创新性地构建了多模态手势识别与协同手势生成算法框架，旨在解决手语学习过程中的动作评估与资源匮乏问题。在此基础上，设计并实现了一套交互式手语学习助手系统。本文的主要贡献如下：
 
-  1. 多模态手势识别算法创新：提出了一种可插拔的多策略解耦与语义集成网络（MDSI），通过“姿势-运动”与“时空-通道”特征解耦，有效降低RGB-D手势识别中的信息冗余，并结合语义滤波与标签平滑机制提升语义区分能力。实验结果表明，该方法在IsoGD和THU-READ数据集上分别超越现有最优方法2.48\%和4.33\%，同时保持轻量化设计，其附加参数量仅占主干网络的6.84\%。
+  1. 多模态手势识别算法创新：提出了一种可插拔的多策略解耦与语义集成网络（MDSI），通过“姿势-运动”与“时空-通道”特征解耦，有效降低RGB-D手势识别中的信息冗余，并结合语义滤波与标签平滑机制提升相似手势的语义区分能力。实验结果表明，该方法在IsoGD和THU-READ数据集上分别超越现有最优方法2.48\%和4.33\%，同时保持轻量化设计，其附加参数量仅占主干网络的6.84\%。
   
-  2. 协同手势生成算法创新：提出了 CoordSpeaker，一种新颖的字幕赋能的协同手势生成方法，实现了手势运动生成中的节奏同步和语义对齐。通过首次引入手势描述生成模块，有效解决了手势数据缺乏文本标注的问题。结合统一的运动表示与可控潜在扩散模型，实现语义与节奏的精准协同控制。实验表明，该方法可生成高质量的（Jerk $0.179\rightarrow$）、语音同步（BC $0.057\uparrow$）、语义相关（MM-Dist: $6.814$）的协同手势运动，显著领先同类方法。同时，将平均推理时间（AITS）降低至0.842秒，较现有方法加速6倍以上，极大提升了实际应用价值。
+  2. 协同手势生成算法创新：提出了 CoordSpeaker，一种新颖的字幕赋能的协同手势生成方法，实现了手势运动生成中的节奏同步和语义对齐。通过首次引入手势描述生成模块，有效解决了手势数据缺乏文本标注的问题。结合统一的运动表示与可控潜在扩散模型，实现语义与节奏的精准协同控制。实验表明，该方法可生成高质量的（Jerk $0.179\rightarrow$）、语音同步（BC $0.057\uparrow$）、语义相关（MM-Dist $6.814$）的协同手势运动，显著领先同类方法。同时，将平均推理时间（AITS）降低至0.842秒，较现有方法加速6倍以上，极大提升了实际应用价值。
   
   3. 交互式手语学习系统构建：基于上述算法，设计并实现了一套集成实时识别、标准动作生成与交互反馈的手语学习系统。系统采用模块化架构，支持手语学习、练习评估和自由练习三种核心交互模式，并提供清晰的界面布局与友好的交互设计。在RGB-D相机上的实验验证表明，系统在12类数据上的识别准确率超过99\%，推理延迟小于0.1秒；用户研究表明，生成的手部动作自然度偏好较同类方法提升4.65\%，充分验证了所提算法的实用价值。
   
@@ -30,7 +30,9 @@ To address these challenges, this thesis proposes novel deep learning-based algo
 
 2. For gesture generation, we introduce CoordSpeaker, a novel coordinated gesture generation framework driven by textual descriptions. The framework innovatively addresses the lack of descriptive text annotations in gesture data by incorporating a gesture description generation module. Through unified motion representation and controllable latent diffusion modeling, it achieves precise coordination of semantics and rhythm. Extensive experiments demonstrate that our method generates high-quality (Jerk $0.179\rightarrow$), speech-synchronized (BC $0.057\uparrow$), and semantically relevant (MM-Dist: $6.814$) coordinated gestures, outperforming existing approaches. Moreover, the optimized inference process reduces average inference time to 0.842 seconds, achieving a 6-fold speedup over existing methods.
 
-3. Building upon these algorithms, we design and implement an interactive sign language learning assistant system. The system adopts a modular architecture integrating real-time recognition, standard gesture generation, and interactive feedback. Experiments using commercial RGB-D cameras demonstrate efficient and reliable recognition performance (>99\% accuracy for 12 gesture classes, inference time <0.1s) and high-quality gesture generation (4.65\% higher naturalness preference than comparable methods). The system implementation validates the practical value of our proposed algorithms and provides a new technical approach to addressing the scarcity of sign language teaching resources.
+3. Building upon these algorithms, we design and implement an interactive sign language learning assistant system. The system adopts a modular architecture integrating real-time recognition, standard gesture generation, and interactive feedback. Experiments using commercial RGB-D cameras demonstrate efficient and reliable recognition performance (>99\% accuracy for 12 gesture classes, inference time <0.1s) and high-quality gesture generation (4.65\% higher naturalness preference than comparable methods). 
+
+The system implementation validates the practical value of our proposed algorithms and provides a new technical approach to addressing the scarcity of sign language teaching resources.
 
   % Use comma as separator when inputting
   \thusetup{

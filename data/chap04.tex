@@ -1,9 +1,9 @@
 % !TeX root = ../thuthesis-example.tex
 
 % \chapter{研究方法}
-\chapter{基于手势描述的协同手势生成算法研究}
+\chapter{基于手势描述的协同手势生成算法}
 \label{sec:GG} 
-为了缓解手语教学中标准示范资源缺乏的问题，本章提出了一种描述驱动的协同手势生成框架（如图\ref{fig:teaser}所示）。
+为了缓解手语教学中标准示范资源缺乏的问题，本章提出了一种描述驱动的协同手势生成框架CoordSpeaker（如图\ref{fig:teaser}所示）。
 首先，本文引入了一种统一的运动表示方法，将不同来源的运动数据嵌入到紧凑的潜在空间中（第\ref{sec:method:m_rep}节）。在此基础上，本文设计了一种可控的手势潜在扩散模型（第\ref{sec:method:gld}节），该模型包含两个关键组件：
 (1) 一个手势变分自编码器，用于学习手势的低维潜在表示；
 (2) 一个在该潜在空间中高效运行的分层条件扩散模型。
@@ -14,7 +14,7 @@
 \begin{figure*}[!h]
   \centering
   \includegraphics[width=\linewidth]{teaser.png}
-  \caption{\textbf{CoordSpeaker} 支持手势字幕和定制的协同的说话者动作生成，既能与字幕保持语义一致，又能与音频保持节奏同步。例如，在演讲场景中，本文的方法允许说话者在讲话时自然地向前走并鞠躬，无缝地做出结束手势。} %Our method generates natural speaking gestures synchronized with speech and text captions. Given speech and text prompts (such as ``sitting'', ``waving while talking'', etc.), our model produces coordinated gesture motions that align with both speech rhythm and textual semantics. The figure above demonstrates gesture examples generated under the same speech with different text prompts.}
+  \caption{\textbf{CoordSpeaker} 支持手势描述和定制的协同说话者动作生成，既能与字幕保持语义一致，又能与音频保持节奏同步。例如，在演讲场景中，本文的方法允许说话者在讲话时自然地向前走并鞠躬，无缝地做出结束手势。} %Our method generates natural speaking gestures synchronized with speech and text captions. Given speech and text prompts (such as ``sitting'', ``waving while talking'', etc.), our model produces coordinated gesture motions that align with both speech rhythm and textual semantics. The figure above demonstrates gesture examples generated under the same speech with different text prompts.}
   \label{fig:teaser}
 \end{figure*}
 
@@ -35,6 +35,15 @@
 
 \subsection{潜在表示}
 近期研究表明，潜在表示在神经运动建模中发挥着关键作用。
+变分自编码器（Variational Autoencoder，VAE）\cite{kingma2013vae} 是一类通过概率建模实现数据生成的深度学习模型。与传统自编码器不同，VAE 的核心思想是对潜在变量进行概率建模，学习数据的概率分布，而不是直接学习数据到数据的映射。这种基于概率的建模方式使得VAE能够生成多样化的样本，并且具有良好的插值性质。
+VAE 假设观测数据由某个潜在变量生成，其生成过程可表示为 $p_{\theta}(x \mid z)$，其中 $z$ 服从某一先验分布（通常为标准正态分布）。然而，直接计算后验分布 $p_{\theta}(z \mid x)$ 通常是不可行的，因此 VAE 采用变分推断，引入一个近似分布 $q_{\phi}(z \mid x)$ 来进行估计。
+% 模型的优化目标是最大化数据的对数似然，由于难以直接计算，通常转而最大化其证据下界（ELBO）：
+% \begin{equation}
+%     \log p_{\theta}(\mathbf{x}) \geq \mathbb{E}_{q_{\phi}(\mathbf{z} \mid \mathbf{x})} \left[ \log p_{\theta}(\mathbf{x} \mid \mathbf{z}) \right] - D_{\mathrm{KL}} \left( q_{\phi}(\mathbf{z} \mid \mathbf{x}) \parallel p(\mathbf{z}) \right).
+% \end{equation}
+% 其中，第一项鼓励模型在给定 $\mathbf{z}$ 的情况下能够准确重构数据，第二项则约束潜在变量的分布，使其接近先验分布，以保证生成的合理性。
+在实际实现中，VAE 采用神经网络参数化编码器和解码器，其中编码器将输入数据映射为潜在变量的均值$\mu$和方差$\sigma$，并通过重参数化技巧 $z = \mu + \sigma \odot \epsilon$（其中 $\epsilon \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$）实现可微分的采样。最终，通过梯度优化训练，使 VAE 既能够进行数据重构，又能生成高质量的新样本。
+
 本文采用基于Transformer的VAE模型将运动序列编码到紧凑且信息丰富的潜在空间中，该模型由编码器$\mathcal{E}$和解码器$\mathcal{D}$组成，并通过长跳跃连接来保持运动细节。
 具体而言，运动序列$x^{1:L}$首先通过编码器$\mathcal{E}$编码为潜在向量$z \in \mathbb{R}^{n\times d}$，其中$d$表示潜在维度。编码器接收逐帧运动特征和可学习的分布令牌作为输入，生成运动潜在空间的高斯分布参数$\mu$和$\sigma$。这些参数通过标准VAE采样过程重参数化得到潜在向量。
 对于运动解码，$\mathcal{D}$采用带有交叉注意力机制的Transformer架构。它以零运动令牌作为查询，潜在向量$z$作为键和值，生成重建的运动序列$\hat{x}^{1:L}$。整个VAE通过均方误差（MSE）和Kullback-Leibler（KL）散度的组合进行训练：
@@ -42,7 +51,7 @@
 L_{\text{VAE}} = \|x^{1:L} - \hat{x}^{1:L}\|_2^2 + \beta \text{KL}(q_{\phi}(z|x^{1:L})\|p(z))
 \label{eq:loss_vae}
 \end{equation}
-其中$\beta$平衡重建和正则化项。这种潜在表示方法在保持运动保真度和多样性的同时实现了高效的手势合成。
+其中，第一项鼓励模型准确重构数据，第二项则约束潜在变量的分布，使其接近先验分布，以保证生成的合理性，$\beta$平衡重建和正则化项。这种潜在表示方法在保持运动保真度和多样性的同时实现了高效的手势合成。
 % [mld] Latent Format [40]. Latent representations are widely used in neural models [46, 47, 19, 9]. We recognize it as motion representation in latent space. By leveraging VAE models, latent vectors can represent plausible motions as:  xˆ1:L = D(z), z = E(x1:L)
 % [mld: ...->latents]
 % We build our motion Variational AutoEncoder, V, based on a transformer-based architecture [46], which consists of a transformer encoder E and a transformer decoder D. The motion VAE, V = {E, D}, is trained by the motion x1:L reconstruction only with the Mean Squared Error (MSE) loss and the Kullback-Leibler (KL) loss. We further enhance two transformers [70] of E and D with long skip connections [59], and remove the action biases used in [46]. The encoder could produce a representative, low-dimensional latent space with high informative density, and the decoder could well reconstruct the latent into motion sequences. More specifically, the motion encoder E takes as input learnable distribution tokens, and frame-wise motion features x1:L of arbitrary length L. We use the embedded distribution tokens as Gaussian distribution parameters μ and σ of the motion latent space Z to reparameterize [30] latent z ∈ Rn×d whose dimension is similar to [46]. The motion decoder D relies on the architecture of the transformer decoder with cross attention mechanism, which takes the L number of zero motion tokes as queries, a latent z ∈ Rn×d as memory, and finally, generates a human motion sequence xˆ1:L with L frames. According to [47], both the latent space Z and variable durations help the model to produce more diverse motions. To further enhance the latent representation, we leverage a long skip-connection structure for the transformer-based encoder E and decoder D. We also explore the effectiveness of the latent’s dimensions on motion sequences representation in Tab. 4. Hence, our VAE models present a stronger motion reconstruction ability and richer diversity (cf. Tab. 5 and Tab. 6). We provide more details about the architecture and the training in the supplementary.
@@ -63,12 +72,20 @@ L_{\text{VAE}} = \|x^{1:L} - \hat{x}^{1:L}\|_2^2 + \beta \text{KL}(q_{\phi}(z|x^
 % 3.2. Motion Latent Diffusion Model  Diffusion probabilistic models [63] can gradually anneal the noise from a gaussian distribution to a data distribution p(x) by learning the noise prediction from a T length Markov noising process, giving {xt}tT=1. It leads to a significant influence in many research domains, such as the most famous image synthesis models [11, 23, 62, 56], the density estimation model [29] and the motion generation models [69, 75]. For motion generation, these works train the diffusion models with a transformer-based denoiser θ (xt, t), which anneal the random noise to motion sequence {xˆ1:N  t }tT=1 iteratively. However, diffusion on raw motion sequences is inefficient and requires exhausting computational resources. Besides, raw motion data from the markless or marker-based motion capture system usually remain high-frequency outliers, which might have a side effect on the diffusion model to learn the actual data distribution. To reduce the computational requirements of the diffusion models on raw motion sequences and improve the synthesized quality, we perform the diffusion process on a representative and lowdimensional motion latent space. Here, we introduce our denoiser θ. Different from the previous UNet-based architecture [59] on the 2D image latent zI , we build a transformer-based denoising model with long skip connections [4] on the motion latent z ∈ Rn×d, which is more suitable for sequential data, like human motion sequences. The diffusion on latent space is modeled as a Markov nosing process using:  q (zt | zt−1) = N (√αtzt−1, (1 − αt) I) .   where the constant αt ∈ (0, 1) is a hyper-parameters for sampling. We then use {zt}tT=0 to denote the noising sequence, and zt−1 = θ (zt, t) for the t-step denoising. We further focus on the unconditional generation with the simple objective [23]:  LMLD := E ,t  [  ‖ − θ (zt, t)‖2  2  ]  , where ∼ N (0, 1), z0 = E(x1:L). During the training of θ, the encoder E is frozen to compress motion into z0. The samples of the diffusion forward process are from the latent distribution p(z0). During the diffusion reverse stage, θ first predict zˆ0 with T iterative denoising steps, then D decodes zˆ0 to motion results with one forward.
 
 \subsection{潜在扩散过程}
-潜在空间中的扩散过程遵循马尔可夫链，逐步向潜在向量$\mathbf{z} \in \mathbb{R}^{n\times d}$添加高斯噪声。对于噪声步骤$t \in [1,T]$，前向过程定义为：
+扩散模型（Diffusion Model）~\cite{ho2020ddpm} 是一类生成模型，通过逐步去噪的方式学习从噪声分布到数据分布的映射。该模型由前向（扩散）过程和反向（去噪）过程组成，其中前向过程逐步向数据添加噪声，而反向过程学习从噪声中逐步恢复数据分布，实现样本生成。扩散模型的一个重要优势是其生成结果多样，生成质量高。通过精心设计的噪声调度，模型能够逐步学习数据分布的不同尺度特征。
+
+潜在空间中的扩散过程遵循马尔可夫链，\textbf{前向过程}在 $T$ 个时间步内逐步向潜在向量$\mathbf{z} \in \mathbb{R}^{n\times d}$添加高斯噪声。对于噪声步骤$t \in [1,T]$，前向过程定义为：
 \begin{equation}
-  q(z_t|z_{t-1}) = \mathcal{N}(\sqrt{\alpha_t}z_{t-1}, (1-\alpha_t)\mathbf{I}),
+  % q(z_t|z_{t-1}) = \mathcal{N}(\sqrt{\alpha_t}z_{t-1}, (1-\alpha_t)\mathbf{I}),
+    q(z_t \mid z_{t-1}) = \mathcal{N}(z_t; \sqrt{1 - \beta_t} z_{t-1}, \beta_t \mathbf{I}),
+  \end{equation}
+其中$\beta_t \in (0,1)$是控制噪声水平的方差调度参数，且$z_T \sim \mathcal{N}(0, \mathbf{I})$。通过重参数化技巧，该分布可直接表示为 $z_0$ 的函数：
+\begin{equation}
+  q(z_t \mid z_0) = \mathcal{N}(z_t; \sqrt{\bar{\alpha}_t} z_0, (1 - \bar{\alpha}_t) \mathbf{I}),
 \end{equation}
-其中$\alpha_t \in (0,1)$是常数方差调度，且$z_T \sim \mathcal{N}(0, \mathbf{I})$。
-为了生成高质量手势，本文采用基于Transformer的去噪器$\epsilon_\theta$来迭代预测和去除噪声。从随机噪声$z_T$开始，去噪器逐步恢复潜在向量$\hat{z}_0$，然后通过$\mathcal{D}$解码为手势运动。去噪过程同时受音频特征$\mathbf{A}$和描述嵌入$\mathbf{C}$的条件约束。
+其中 $\bar{\alpha}_t = \prod_{i=1}^{t} (1 - \beta_i)$。此公式允许从任意中间时间步高效采样。
+
+\textbf{反向过程}旨在建模后验分布 $q(\mathbf{z}_{t-1} \mid \mathbf{z}_t)$。为了生成高质量手势，本文采用基于Transformer的去噪器$\epsilon_\theta$来迭代预测和去除噪声。从随机噪声$z_T$开始，去噪器逐步恢复潜在向量$\hat{z}_0$，然后通过$\mathcal{D}$解码为手势运动。去噪过程同时受音频特征$\mathbf{A}$和描述嵌入$\mathbf{C}$的条件约束。
 
 \subsection{分层条件注入}
 为了实现对手势生成的精确多模态控制，本文的模型通过精心设计的嵌入和分层注入过程整合多个条件。
@@ -171,7 +188,7 @@ Task & Input & Output \\
 在本节中，本文通过定量和定性分析从四个方面评估本文的方法：
 (1) \textbf{协同手势生成}。与最先进的基线相比，评估模型在联合语音和字幕控制下生成语音同步、语义相关的全身手势的能力。
 (2) \textbf{文本驱动运动生成}。与最先进的文本到运动方法进行比较，以评估语义理解和非自发手势生成能力。
-(3) \textbf{手势字幕}。评估生成的手势字幕的质量和多样性标志着弥合手势数据集中语义差距的第一种方法。
+(3) \textbf{手势描述}。评估生成的手势描述的质量和多样性标志着弥合手势数据集中语义差距的第一种方法。
 (4) \textbf{消融研究}。分析本文方法中关键组件的影响。
 
 \subsection{实验设置}
@@ -250,7 +267,7 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 % 单条件结果 
 \begin{table*}[t]
   \centering
-  \caption{与 HumanML3D~\cite{guo2022humanml3d} 测试集上的最新方法进行比较。本文按照 \cite{chen2023executing} 计算标准度量。`$\rightarrow$' 表示越接近真实运动越好。每个度量均在 20 次运行的 95\% 置信区间下报告。}
+  \caption{与 HumanML3D~\cite{guo2022humanml3d} 测试集上的最新方法进行比较。本文按照 \cite{chen2023executing} 计算标准指标。`$\rightarrow$' 表示越接近真实运动越好。每个指标均在 20 次运行的 95\% 置信区间下报告。}
   \label{tab:h3d_results}
   \small
   \begin{tabular}{c cccccc}
@@ -289,7 +306,7 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 \end{figure*}
 \subsection{手势描述生成}
 如图~\ref{fig:visualization_caption}所示，所提出的手势描述框架展示了在生成描述性手势标注方面的实用能力。
-结果表明，本文的方法不仅能准确描述手势运动分布内的细粒度手部动作(如\textit{``moving both hands and forearms at chest height''})，还能捕捉粗粒度的全身动作(如\textit{``moves their waist from ..."})。
+结果表明，本文的方法不仅能准确描述手势运动分布内的细粒度手部动作(如\textit{``moving both hands and forearms at chest height''})，还能捕捉粗粒度的全身动作(如\textit{``moves their waist from ...''})。
 此外，由于手势运动通常持续较长时间，所提出的多粒度描述方法在捕捉长时间窗口内的连续复杂组合动作方面表现出优势(如\textit{``a person \textless motion 1\textgreater, then \textless motion 2\textgreater as \textless motion 3\textgreater''})。
 然而，本文也注意到对于较长的手势序列，模型在时序位置感知方面存在困难，偶尔会混淆动作顺序。这一限制可以通过使用本文提出的细粒度描述策略来管理动作复杂度。未来的改进可能涉及引入更强的位置编码或时序建模。
 
@@ -357,14 +374,14 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 结果显示本文的方法实现了 $0.842^{\pm .002}$ 秒的AITS，比FreeTalker~\cite{yang2024freetalker} ($6.632^{\pm .044}$s) 和 SynTalker~\cite{chen2024syntalker} ($5.804^{\pm .044}$s) 快6倍以上。
 这种显著的加速可以归因于本文高效的分层去噪架构和优化的潜在扩散过程，使本文的方法更适合实际应用。
 
-\subsection{更多可视化结果}
+\subsection{可视化结果}
 \textbf{更多协同生成结果。}
 如图~\ref{fig:vis_supply}所示，本文使用相同的音频和不同的文本标题提供了更加协同的生成结果。
 这些结果进一步证实了本文提出的方法在联合语音字幕控制下生成协同语音自发手势和字幕驱动的非自发运动的有效性。
 
 % 更多手势字幕结果
-\textbf{更多手势字幕结果。}
-本文在图~\ref{fig:vis_caption_supply}中展示了额外的手势字幕结果，进一步证明了本文的方法在准确地将手势映射到文本方面的有效性。
+\textbf{更多手势描述结果。}
+本文在图~\ref{fig:vis_caption_supply}中展示了额外的手势描述结果，进一步证明了本文的方法在准确地将手势映射到文本方面的有效性。
 正如彩色框中突出显示的那样，该模型在描述复杂、连续的动作时成功捕捉了细粒度的手部动作和粗粒度的全身动作。
 
 \begin{figure*}[t]
@@ -377,7 +394,7 @@ BEAT数据集包含约76小时的语音-手势对齐的多模态序列，涵盖�
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\linewidth]{visualization_caption_supply.png}
-  \caption{更多手势字幕结果。彩色框突出显示了手势和文本字幕之间的精确映射。}
+  \caption{更多手势描述结果。彩色框突出显示了手势和文本字幕之间的精确映射。}
   \label{fig:vis_caption_supply}
 \end{figure*}
 

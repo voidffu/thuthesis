@@ -1,11 +1,11 @@
 % !TeX root = ../thuthesis-example.tex
 
 % \chapter{研究方法}
-\chapter{基于多模态的动态手势识别算法研究}
+\chapter{基于多模态的动态手势识别算法}
 \label{sec:GR}
 针对手语教学中的动作评估挑战，本章对基于多模态的动态手势识别算法进行了研究。
-为了解决动态手势识别中“信息冗余（IR）”和 “信息缺失（IA）”的问题，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
-为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (SIN)，它有两个关键组件：语义滤波器 (SF) 和语义标签平滑 (SLS)，以补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
+为了解决动态手势识别中“信息冗余（Information Redundancy，IR）”和 “信息缺失（Information Absence，IA）”的问题，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (Multi-strategy Decoupling with Semantic Integration Network，MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (Multi-strategy Decoupling Network，MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
+为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (Semantic Integration Network，SIN)，它有两个关键组件：语义滤波器 (Semantic Filter，SF) 和语义标签平滑 (Semantic Label Smoothing，SLS)，以补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
 所提出的方法在 IsoGD 和 THU-READ 两个大规模基准数据集上取得了先进的识别性能，展现了其在实际应用中的潜力。
 %应用
 \begin{figure}[tb]
@@ -43,7 +43,7 @@
 \end{figure}
 
 如图~\ref{fig:PMD}所示，PMD 主要包括三个阶段：i) 姿势估计、ii) 深度校准和 iii) 姿势-运动解耦。
-对于 RGB 数据，本文首先使用在 COCO-WholeBody 数据集 \cite{jin2020whole} 上预训练的姿势估计器 HRNet \cite{sun2019deep} 来提取并保存每帧 2D 身体骨架\footnote{请注意，姿势估计器在训练期间处于冻结状态，确保它不会引入任何额外的计算成本。此外，使用手部检测器检测和分割手部是现场的常见做法 \cite{AVOLA2022108762,zhou2021regional,chen2022multi}，这是一个完全公平的设置。}。
+对于 RGB 数据，本文首先使用在 COCO-WholeBody 数据集 \cite{jin2020whole} 上预训练的姿势估计器 HRNet \cite{sun2019deep} 来提取并保存每帧 2D 身体骨架\footnote{请注意，姿势估计器在训练期间处于冻结状态，确保它不会引入任何额外的计算成本。此外，使用手部检测器检测和分割手部是领域内的常见做法 \cite{AVOLA2022108762,zhou2021regional,chen2022multi}，这是一个完全公平的设置。}。
 对于深度数据，本文提前进行视频校准以确保配准 \cite{liu2017continuous}。
 具体来说，对于 IsoGD 数据集 \cite{wan2016chalearn}，本文利用 Liu 等人提供的对齐深度视频数据 \cite{liu2017continuous}，并进一步调整 Narayana 等人提供的深度数据映射 \cite{narayana2018focus}，使用以下变换：$D'=\frac{D-7}{0.93}-14$。
 对于 THU-READ 数据集，深度数据已提前校准。
@@ -101,7 +101,7 @@ STCD 的结果输出 ${f}_{out}$ 可以表示如下：$\mathbf{f}_{out} = \mathb
 \begin{figure}[tb]
 \centering
 \includegraphics[width=1.0\linewidth]{SIGRv1 .pdf}
-\caption{语义整合网络 (SIN) 结合了语义滤波器 (SF) 和语义标签平滑 (SLS)，以促进语义知识整合。 }
+\caption{语义集成网络 (SIN) 。通过引入语义滤波器 (SF) 和语义标签平滑 (SLS)，以促进语义知识整合。 }
 \label{fig:SIN}
 \end{figure}
 \section{多模态手势语义集成网络}
@@ -126,7 +126,7 @@ STCD 的结果输出 ${f}_{out}$ 可以表示如下：$\mathbf{f}_{out} = \mathb
 \end{equation}
 这些混合语义特征被进一步激活和扁平化，通过全连接（FC）层生成语义分支识别结果。
 
-为了监督语义分支的优化，本文将 \cite{zuo2023natural} 每个语义标签 $a$ 与样本视觉标签 $b$ 混合。
+为了监督语义分支的优化，本文将每个语义标签 $a$ 与样本视觉标签 $b$ 混合 \cite{zuo2023natural}。
 具体来说，语义分支的混合标签 $\mathbf{y}_{SF}^i \in \mathbb{R}^N$ 可以表示为：
 \begin{equation}
 y_{SF}^i[k] = \begin{cases}
@@ -171,7 +171,7 @@ Loss = w_{s} \times L_{s} + w_{v} \times L_{v}.
 \end{equation}
 %
 请注意，本文仅将 SIN 网络应用于每个全局视觉特征 $f_v^G$ (式~\eqref{eq:fv})，以确保视觉特征和语义特征之间交互的完整性。
-因此，本文采用常用的分数融合方法来结合每个分支和模态的预测。
+最后，本文采用常用的分数融合方法来结合每个分支和模态的预测。
 
 \section{实验结果与分析}
 \label{sec:GR_EXP}
@@ -313,8 +313,8 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
         (1) Ours-$\text{RGB}^\textbf{D}$ & \XSolidBrush & \Checkmark & \XSolidBrush & \XSolidBrush & 50.47 & 51.75 \\
         (2) Ours-$\text{Depth}^\textbf{G}$ & \XSolidBrush & \XSolidBrush & \Checkmark & \XSolidBrush & 61.34 & 66.01\\
         (3) Ours-$\text{Depth}^\textbf{D}$ & \XSolidBrush & \XSolidBrush & \XSolidBrush & \Checkmark & 47.89 & 47.99\\
-        (4) Ours-RGB & \Checkmark & \Checkmark & \XSolidBrush & \XSolidBrush & 72.58 & 68.32\\
-        (5) Ours-Depth & \XSolidBrush & \XSolidBrush & \Checkmark & \Checkmark & 65.32 & 68.00\\
+        (4) Ours-RGB & \Checkmark & \Checkmark & \XSolidBrush & \XSolidBrush & 72.79 & 68.32\\
+        (5) Ours-Depth & \XSolidBrush & \XSolidBrush & \Checkmark & \Checkmark & 65.99 & 68.00\\
         (6) Ours-RGB-D &  \Checkmark & \Checkmark & \Checkmark & \Checkmark & \textbf{75.09}& \textbf{74.73}\\ 
   \bottomrule
 \end{tabular}
@@ -322,7 +322,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \end{table*}
 
 \subsection{与最先进方法的比较}
-本文将本文的 MDSI 方法与 IsoGD 和 THU-READ 数据集上的其他最佳方法进行了比较。需要注意的是，这里报告了每种方法的最佳性能。
+本文将 MDSI 方法与 IsoGD 和 THU-READ 数据集上的其他最佳方法进行了比较。需要注意的是，这里报告了每种方法的最佳性能。
 
 \textbf{IsoGD 上的性能。}
 表 \ref{tab:Iso SOTA} 显示了在 IsoGD 数据集上与最先进方法的性能比较。
@@ -334,7 +334,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \textbf{THU-READ 上的性能。}
 表 \ref{tab:THU SOTA} 展示了在 THU-READ 数据集上与最先进方法的性能比较。报告的结果是根据 \cite{tang2018multi} 在 CS 协议下对所有 4 个分割取平均值得出的。
 本文的 MDSI-Transformer 在所有方法中都实现了最先进的性能，在简单的分数融合下，RGB-D 结果的最高性能达到 89.36\%，凸显了 MDSI 的优势。
-同时，本文的 MDSI-CNN 在 RGB、深度和 RGB-D 模态上分别比现有的最佳 CNN 方法有显著的改进，分别提高了约 4.5\%、1\% 和 1\%，进一步验证了本文方法的有效性。
+同时，本文的 MDSI-CNN 在 RGB、深度和 RGB-D 模态上分别比现有的最佳 CNN 方法有显著的改进，分别提高了约 4.5\%、1\% 和 4.3\%，进一步验证了本文方法的有效性。
 
 \textbf{讨论。}
 总体而言，表 \ref{tab:Iso SOTA} 和 \ref{tab:THU SOTA} 中的结果证明了 MDSI 在不同主干设置中的稳健性，在两个数据集的两种配置下均实现了最先进的性能。虽然 MDSI 始终优于其他方法，但本文观察到某些偏差。具体而言，不同的编码器主干表现出对不同数据集的偏好：CNN 在 IsoGD 上表现最佳，而 Transformer 在 THU-READ 上表现出色。这可能归因于数据集特征的差异，例如自我中心与第三人称视角，或对超参数和预处理技术的敏感性（例如，高级姿势估计可能会进一步提高性能）。
@@ -343,9 +343,9 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \subsection{消融研究}
 \subsubsection{姿势-运动解耦 (PMD) 的影响}
 如表~\ref{tab:branch} 所示，本文首先分析 MDN 各子分支的性能，以验证姿势-运动解耦 (PMD) 的影响。
-以 MDSI-CNN 为例：将 $\mathcal{G}$ 分支与 $\mathcal{D}$ 分支融合后，与单独使用单个 $\mathcal{G}$ 和 $\mathcal{D}$ 分支相比，准确率显著提高（RGB：$\uparrow3.65\%$ 和 $\uparrow22.11\%$，深度：$\uparrow3.98\%$ 和 $\uparrow17.43\%$）。
+以 MDSI-CNN 为例：将 $\mathcal{G}$ 分支与 $\mathcal{D}$ 分支融合后，与单独使用单个 $\mathcal{G}$ 和 $\mathcal{D}$ 分支相比，准确率显著提高（RGB：$\uparrow3.86\%$ 和 $\uparrow22.32\%$，深度：$\uparrow4.65\%$ 和 $\uparrow18.10\%$）。
 这一实质性的增强凸显了 PMD 的有效性，并表明全局信息和解耦信息都至关重要，因为它们共同促进了识别性能。
-此外，与单模态 (RGB-D：$\uparrow2.01\%$ 和 $\uparrow9.27\%$) 相比，多模态融合带来了另一项改进，证实了该模型强大的拟合能力。
+此外，与单模态相比，多模态融合带来了额外的提升 (RGB-D：$\uparrow2.30\%$ 和 $\uparrow9.10\%$) ，证实了该模型强大的拟合能力。
 在本文的 MDSI-Transformer 中也观察到了这种趋势，突显了本文的方法在不同编码器架构中的一致优势。
 
 此外，本文评估了基于 MDSI-CNN 的 PMD 模块中姿势和运动表征的影响。结果表明，仅使用姿势特征（12.71\%）或运动特征（20.99\%）是不够的，因为每个特征仅代表部分手势信息。然而，将这些特征集成到 PMD 模块中可显著提高识别准确率至 50.47\%。这进一步证明了 PMD 的有效性，突出了姿势和运动信息可以同时捕捉细微的手势特征，并在有效结合时增强识别能力。
@@ -356,7 +356,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 集成 STCD 的模型分别比基础 MDSI-CNN 和 MDSI-Transformer 模型实现了 4.17\% 和 2.16\% 的改进，
 这反映了时空通道解耦纠缠特征有助于学习判别信息。
 值得注意的是，本文的 STCD 模块既可插入又轻量级，参数最小增加 0.5M（表~\ref{tab:params_new}）。
-为了减轻额外信息的干扰，本文未启用 SIN。
+为了减轻额外信息的干扰，本实验未启用 SIN。
 
 \begin{table*}
     \small
@@ -402,7 +402,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 最终，利用 SF 和 SLS 可实现最佳性能 ($\uparrow1.00\%$)，显著超越基础模型。
 
 本文进一步研究了 SF 中使用的语义过滤器的数量 $n$ 对识别准确率的影响。
-本文设计了三种 SF 模式：1）$\text{SF}_1$，其中每个视觉特征都与相应的单个语义特征集成；2）$\text{SF}_b$，其中每个视觉特征都与其批次对应的 $b$ 个语义特征集成；3）$\text{SF}_N$，其中每个视觉特征都与所有 $N$ 个语义特征集成。
+本文设计了三种 SF 模式：1）$\text{SF}_1$，其中每个视觉特征都与相应的单个语义特征集成；2）$\text{SF}_b$，其中每个视觉特征都与其批次对应的 $b$ 个语义特征集成；3）$\text{SF}_N$，其中每个视觉特征都与所有类别的 $N$ 个语义特征集成。
 如表~\ref{tab:sin} 所示，将过滤器的数量从 1 增加到 16 再增加到 249，分别带来了 0.07\% 的改进。
 这一趋势表明，语义过滤器的数量越多，集成的语义信息就越丰富，从而更有效地增强了视觉网络的性能。
 此外，本文的研究结果表明，当过滤器随机初始化时（如在 SF$_0$ 设置中），与集成语义信息的过滤器相比，识别性能下降了 0.52\%。这一观察进一步强调了整合语义信息的必要性和有效性。
@@ -447,7 +447,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
     {\includegraphics[width=0.49\linewidth]{confusion_matrix_59.85_spec.png}}
   \subcaptionbox{\label{fig:confuse_ours}}
     {\includegraphics[width=0.49\linewidth]{confusion_matrix_75.07_spec.png}}
-  \caption{可视化所提方法的增强效果。 (a) 基础模型的特征分布可视化。(b) 所提出的 MDSI 的特征分布可视化。(c) 基础模型的混淆矩阵。(d) 所提出的 MDSI 的混淆矩阵。}
+  \caption{可视化本文方法的增强效果。 (a) 基础模型的特征分布可视化。(b) MDSI 的特征分布可视化。(c) 基础模型的混淆矩阵。(d) MDSI 的混淆矩阵。}
   \label{fig:vis}
 \end{figure}
 
@@ -457,7 +457,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
     {\includegraphics[width=0.49\linewidth]{comp_gap.pdf}}
   \subcaptionbox{\label{fig:comp_sim}}
     {\includegraphics[width=0.49\linewidth]{comp_similar.pdf}}
-  \caption{阐明所提出的 MDSI 在解决信息冗余 (IR) 和信息缺失 (IA) 挑战方面的增强功能。 (a) IR 场景下的性能改进（对应于图 ~\ref{fig:gap_sample} 中的样本）。 (b) IA 场景下的性能改进。（对应于图 ~\ref{fig:sim_sample} 中的样本）}
+  \caption{MDSI 在解决信息冗余 (IR) 和信息缺失 (IA) 挑战方面的增强效果。 (a) IR 场景下的性能改进（对应于图 ~\ref{fig:gap_sample} 中的样本）。 (b) IA 场景下的性能改进。（对应于图 ~\ref{fig:sim_sample} 中的样本）}
   \label{fig:comp}
 \end{figure}
 
@@ -479,8 +479,8 @@ MDSI带来的改进值得注意：i）对于遭受IR的样本类别，MDSI将准
 
 
 \section{本章小结}
-针对手语教学中的动作评估问题，本章提出了一种可插拔的多模态动态手势识别算法，称为多策略解耦与语义集成（MDSI），旨在解决RGB-D手势识别中的信息冗余（IR）和信息缺失（IA）挑战。
-首先，第~\ref{sec:MDN}节引入了多策略解耦网络（MDN），通过解耦"姿态-运动"和"时空-通道"特征来减轻冗余信息。
+针对手部动作评估问题，本章提出了一种可插拔的多模态动态手势识别算法，称为多策略解耦与语义集成（MDSI），旨在解决RGB-D手势识别中的信息冗余（IR）和信息缺失（IA）挑战。
+首先，第~\ref{sec:MDN}节引入了多策略解耦网络（MDN），通过解耦“姿态-运动”和“时空-通道”特征来减轻冗余信息。
 随后，第~\ref{sec:SIN}节提出了语义集成网络（SIN），该网络通过语义过滤和标签平滑增强语义理解，有效地指导视觉相似手势的区分。
 MDSI的可插拔特性使其能够以最小的计算开销无缝集成到各种视频编码器架构中，展示了其在动作识别和手语识别等相关领域的扩展潜力。大量实验（第~\ref{sec:GR_EXP}节）表明，MDSI在两个广泛认可的基准测试中超越了先前的最先进方法，展现了其在手语教学动作评估中的实际应用潜力。
 % 本文预计通过进一步改进MDSI和优化预处理将增强其实时部署能力。

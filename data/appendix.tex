@@ -1,60 +1,86 @@
 % !TeX root = ../thuthesis-example.tex
 
-\chapter{补充内容}
+\chapter{可视化结果}
+\label{sec:appendix_vis}
+% 在补充材料中，我们提供了更多实施细节（第 6 节）、额外的实验结果（第 7 节）、更多可视化结果（第 8 节）、局限性讨论（第 9 节）以及用户研究伦理考虑（第 10 节）。
+本章提供了更多手势生成的可视化结果。
 
-附录是与论文内容密切相关、但编入正文又影响整篇论文编排的条理和逻辑性的资料，例如某些重要的数据表格、计算程序、统计表等，是论文主体的补充内容，可根据需要设置。
+\textbf{协同生成结果。}
+图~\ref{fig:vis_supply}展示了更多的协同手势生成结果，使用相同的音频和不同的文本标题控制生成。
+这些结果进一步证实了本文提出的方法在联合语音字幕控制下生成协同的语音自发手势和字幕驱动的非自发运动的有效性。
 
-附录中的图、表、数学表达式、参考文献等另行编序号，与正文分开，一律用阿拉伯数字编码，
-但在数码前冠以附录的序号，例如“图~\ref{fig:appendix-figure}”，
-“表~\ref{tab:appendix-table}”，“式\eqref{eq:appendix-equation}”等。
+% 更多手势字幕结果
+\textbf{手势描述结果。}
+图~\ref{fig:vis_caption_supply}展示了更多的的手势描述结果，彩色框突出显示了手势和文本字幕之间的精确映射，进一步证明了本文的方法在准确地将手势映射到文本方面的有效性。
+正如彩色框显示，该模型在描述复杂、连续的动作时成功捕捉了细粒度的手部动作和粗粒度的全身动作。
 
-
-\section{插图}
-
-% 附录中的插图示例（图~\ref{fig:appendix-figure}）。
-
-\begin{figure}
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.6\linewidth]{example-image-a.pdf}
-  \caption{附录中的图片示例}
-  \label{fig:appendix-figure}
-\end{figure}
+  \includegraphics[width=\linewidth]{visualization_supply.png}
+  \caption{更多协同手势生成结果。}
+  \label{fig:vis_supply}
+\end{figure*}
 
-
-\section{表格}
-
-% 附录中的表格示例（表~\ref{tab:appendix-table}）。
-
-\begin{table}
+\begin{figure*}[t]
   \centering
-  \caption{附录中的表格示例}
-  \begin{tabular}{ll}
-    \toprule
-    文件名          & 描述                         \\
-    \midrule
-    thuthesis.dtx   & 模板的源文件，包括文档和注释 \\
-    thuthesis.cls   & 模板文件                     \\
-    thuthesis-*.bst & BibTeX 参考文献表样式文件    \\
-    thuthesis-*.bbx & BibLaTeX 参考文献表样式文件  \\
-    thuthesis-*.cbx & BibLaTeX 引用样式文件        \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:appendix-table}
-\end{table}
+  \includegraphics[width=\linewidth]{visualization_caption_supply.png}
+  \caption{更多手势描述结果。}%彩色框突出显示了手势和文本字幕之间的精确映射。}
+  \label{fig:vis_caption_supply}
+\end{figure*}
+
+% 附录是与论文内容密切相关、但编入正文又影响整篇论文编排的条理和逻辑性的资料，例如某些重要的数据表格、计算程序、统计表等，是论文主体的补充内容，可根据需要设置。
+
+% 附录中的图、表、数学表达式、参考文献等另行编序号，与正文分开，一律用阿拉伯数字编码，
+% 但在数码前冠以附录的序号，例如“图~\ref{fig:appendix-figure}”，
+% “表~\ref{tab:appendix-table}”，“式\eqref{eq:appendix-equation}”等。
 
 
-\section{数学表达式}
+% \section{插图}
 
-% 附录中的数学表达式示例（式\eqref{eq:appendix-equation}）。
-\begin{equation}
-  \frac{1}{2 \uppi \symup{i}} \int_\gamma f = \sum_{k=1}^m n(\gamma; a_k) \mathscr{R}(f; a_k)
-  \label{eq:appendix-equation}
-\end{equation}
+% % 附录中的插图示例（图~\ref{fig:appendix-figure}）。
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=0.6\linewidth]{example-image-a.pdf}
+%   \caption{附录中的图片示例}
+%   \label{fig:appendix-figure}
+% \end{figure}
 
 
-\section{文献引用}
+% \section{表格}
 
-附录\cite{dupont1974bone}中的参考文献引用\cite{zhengkaiqing1987}示例
-\cite{dupont1974bone,zhengkaiqing1987}。
+% % 附录中的表格示例（表~\ref{tab:appendix-table}）。
+
+% \begin{table}
+%   \centering
+%   \caption{附录中的表格示例}
+%   \begin{tabular}{ll}
+%     \toprule
+%     文件名          & 描述                         \\
+%     \midrule
+%     thuthesis.dtx   & 模板的源文件，包括文档和注释 \\
+%     thuthesis.cls   & 模板文件                     \\
+%     thuthesis-*.bst & BibTeX 参考文献表样式文件    \\
+%     thuthesis-*.bbx & BibLaTeX 参考文献表样式文件  \\
+%     thuthesis-*.cbx & BibLaTeX 引用样式文件        \\
+%     \bottomrule
+%   \end{tabular}
+%   \label{tab:appendix-table}
+% \end{table}
+
+
+% \section{数学表达式}
+
+% % 附录中的数学表达式示例（式\eqref{eq:appendix-equation}）。
+% \begin{equation}
+%   \frac{1}{2 \uppi \symup{i}} \int_\gamma f = \sum_{k=1}^m n(\gamma; a_k) \mathscr{R}(f; a_k)
+%   \label{eq:appendix-equation}
+% \end{equation}
+
+
+% \section{文献引用}
+
+% 附录\cite{dupont1974bone}中的参考文献引用\cite{zhengkaiqing1987}示例
+% \cite{dupont1974bone,zhengkaiqing1987}。
 
 \printbibliography

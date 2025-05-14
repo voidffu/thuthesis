@@ -5,15 +5,16 @@
 \label{sec:GR}
 针对手语教学中的动作评估挑战，本章对基于多模态的动态手势识别算法进行了研究。
 为了解决动态手势识别中“信息冗余（Information Redundancy，IR）”和 “信息缺失（Information Absence，IA）”的问题，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (Multi-strategy Decoupling with Semantic Integration Network，MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (Multi-strategy Decoupling Network，MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
-为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (Semantic Integration Network，SIN)，它有两个关键组件：语义滤波器 (Semantic Filter，SF) 和语义标签平滑 (Semantic Label Smoothing，SLS)，以补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
+为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (Semantic Integration Network，SIN)，它有两个关键组件：语义滤波器 (Semantic Filter，SF) 和语义标签平滑 (Semantic Label Smoothing，SLS)，通过自然语言建模补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
 所提出的方法在 IsoGD 和 THU-READ 两个大规模基准数据集上取得了先进的识别性能，展现了其在实际应用中的潜力。
 %应用
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{MDSI_v1.2.pdf}%framework.png}
-  \caption{本文的可插入式多策略语义集成解耦 (MDSI) 框架概述。MDSI 可以无缝集成到基本编码器 $\varepsilon$ 中，从两个方面增强手势识别性能：
-  i) 对于信息冗余，MDN (图~~\ref{fig:MDN}) 通过 PMD 和 STCD 强调不同维度和尺度的特征信息 (图~\ref{fig:handdecomp})。
-  ii) 对于信息缺失，SIN 通过 SF 将自然语言建模与 SLS 一起集成到手势识别中 (图~\ref{fig:SIN})。}
+  \caption{本文的可插入式多策略解耦与语义集成（MDSI）框架。}
+  % MDSI 可以无缝集成到基础编码器 $\varepsilon$ 中，从两个方面增强手势识别性能：
+  % i) 对于信息冗余，MDN (图~~\ref{fig:MDN}) 通过 PMD 和 STCD 强调不同维度和尺度的特征信息 (图~\ref{fig:handdecomp})。
+  % ii) 对于信息缺失，SIN 通过 SF 将自然语言建模与 SLS 一起集成到手势识别中 (图~\ref{fig:SIN})。}
   \label{fig:MDSI}
 \end{figure}
 
@@ -22,23 +23,26 @@
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.8\linewidth]{MDN_v1.pdf}
-    \caption{多策略解耦网络 (MDN)。MDN 配置为双分支视频编码器。i) 全局分支 ($\mathcal{G}$) 将原始视频 $\mathbf{V}$ 作为输入并对全局特征进行编码。ii) 解耦分支 ($\mathcal{D}$) 利用 PMD 模块同时捕获解耦的细粒度姿势 $\mathbf{h}$ 和粗粒度手部运动 $\mathbf{m}$。iii) STCD 模块插入编码器 $\varepsilon_{\mathcal{G}}$ 和 $\varepsilon_{\mathcal{D}}$ 的不同阶段，以执行与维度无关的解耦和注意。}
+    \caption{多策略解耦网络（MDN）。}
+    % ，MDN 配置为双分支视频编码器。i) 全局分支 ($\mathcal{G}$) 将原始视频 $\mathbf{V}$ 作为输入并对全局特征进行编码。ii) 解耦分支 ($\mathcal{D}$) 利用 PMD 模块同时捕获解耦的细粒度姿势 $\mathbf{h}$ 和粗粒度手部运动 $\mathbf{m}$。iii) STCD 模块插入编码器 $\varepsilon_{\mathcal{G}}$ 和 $\varepsilon_{\mathcal{D}}$ 的不同阶段，以执行维度独立的解耦和注意。}
   \label{fig:MDN}
 \end{figure}
 
 在本节中，本文介绍了一种多策略解耦网络 (MDN)，它配置为双分支架构，包括姿势-运动解耦模块 (PMD) 和空间-时间-通道解耦模块 (STCD)。
-如图~\ref{fig:MDN} 所示，本文首先利用 PMD 将手势视频 $\mathbf{V}$ 解耦为细粒度姿势 $\mathbf{h}$ 和粗粒度运动 $\mathbf{m}$。原始视频 $\mathbf{V}$ 以及解耦结果 $\mathbf{(h, m)}$ 通常分别输入到 MDN 的全局分支 ($\mathcal{G}$) 和分解分支 ($\mathcal{D}$) 进行视觉时空特征提取。
-此外，可插入 STCD 插入编码器 $\varepsilon_{\mathcal{G}}$ 和 $\varepsilon_{\mathcal{D}}$ 的各个阶段，以实现有效的与维度无关的解耦和注意。
+如图~\ref{fig:MDN} 所示，全局分支 ($\mathcal{G}$) 将原始视频 $\mathbf{V}$ 作为输入并对全局特征进行编码；解耦分支 ($\mathcal{D}$) 利用 PMD 模块将手势视频 $\mathbf{V}$ 解耦为细粒度姿势 $\mathbf{h}$ 和粗粒度运动 $\mathbf{m}$，同时捕获不同尺度的手势特征。
+% 本文首先利用 PMD 将手势视频 $\mathbf{V}$ 解耦为细粒度姿势 $\mathbf{h}$ 和粗粒度运动 $\mathbf{m}$。原始视频 $\mathbf{V}$ 以及解耦结果 $\mathbf{(h, m)}$ 通常分别输入到 MDN 的全局分支 ($\mathcal{G}$) 和解耦分支 ($\mathcal{D}$) 进行视觉时空特征提取。
+此外，可插拔 STCD 插入编码器 $\varepsilon_{\mathcal{G}}$ 和 $\varepsilon_{\mathcal{D}}$ 的各个阶段，以实现有效的维度独立的解耦和注意。
+通过上述设计，多策略解耦网络（MDN）可以实现精细的视觉时空特征解耦提取。
 
 \subsection{姿态-运动解耦（PMD）}
 \label{sec:pose-motion}
 \begin{figure}[tb]
 \centering
-\subcaptionbox{\label{fig:PMD}}
+\subcaptionbox{姿势-运动解耦（PMD）\label{fig:PMD}}
 {\includegraphics[width=0.44\linewidth]{PMD.pdf}}
-\subcaptionbox{\label{fig:STCD}}
+\subcaptionbox{空间-时间-通道解耦（STCD）\label{fig:STCD}}
 {\includegraphics[width=0.52\linewidth]{STCDv1 .pdf}}
-\caption{多策略解耦管道。 (a) 姿势-运动解耦 (PMD)，(b) 空间-时间-通道解耦 (STCD)。}
+\caption{多策略解耦管道。}
 \label{fig:handdecomp}
 \end{figure}
 
@@ -65,7 +69,6 @@
 以 SDM 为例，其目的是识别每帧手势特征中的关键空间区域。首先，给定 $\mathbf{f}_{in}$，本文使用 Conv3d 来导出查询、键和值特征，分别表示为 $\mathbf{Q}^{\mathcal{S}}$、$\mathbf{K}^{\mathcal{S}}$ 和 $\mathbf{V}^{\mathcal{S}}$。
 本文合并时间和通道维度以获得 \emph{空间} 查询、键和值向量：$\mathbf{q}^{\mathcal{S}}\in \mathbb{R}^{HW\times CT}$、$\mathbf{k}^{\mathcal{S}}\in \mathbb{R}^{HW\times CT}$、$\mathbf{v}^{\mathcal{S}}\in \mathbb{R}^{CT\times HW}$。
 然后，利用 $\mathbf{q}^{\mathcal{S}}$ 和 $\mathbf{k}^{\mathcal{S}}$ 计算注意矩阵 $\mathbf{A}^{\mathcal{S}}\in \mathbb{R}^{HW\times HW}$，如下所示：
-
 \begin{equation}
 \mathbf{A}^{\mathcal{S}} = \text{softmax}\left(\mathbf{q}^{\mathcal{S}}\left(\mathbf{k}^{\mathcal{S}}\right)^{\top}\right).
 \end{equation}
@@ -101,7 +104,7 @@ STCD 的结果输出 ${f}_{out}$ 可以表示如下：$\mathbf{f}_{out} = \mathb
 \begin{figure}[tb]
 \centering
 \includegraphics[width=1.0\linewidth]{SIGRv1 .pdf}
-\caption{语义集成网络 (SIN) 。通过引入语义滤波器 (SF) 和语义标签平滑 (SLS)，以促进语义知识整合。 }
+\caption{语义集成网络（SIN） 。}%通过引入语义滤波器 (SF) 和语义标签平滑 (SLS)，以促进语义知识整合。 }
 \label{fig:SIN}
 \end{figure}
 \section{多模态手势语义集成网络}
@@ -208,6 +211,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 在推理过程中，输入序列被中心裁剪为 224 × 224。
 本文根据视觉特征形状分别将 MDSI-CNN 和 MDSI-Transformer 的 SF 中的卷积维度 $d_k$ 设置为 3 和 1。
 除非另有说明，所有消融研究均在 IsoGD 数据集的 RGB 数据上进行。
+最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。
 % 有关更多实施细节，请参阅 \ref{sec:appendix_hp}。
 
 % \renewcommand{\arraystretch}{0.75}
@@ -216,7 +220,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 % \setlength{\textfloatsep}{8pt}
 \begin{table*}[htbp] %[!ht]
 % \small
-  \caption{与 IsoGD 数据集上最先进的方法的性能比较。最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
+  \caption{与 IsoGD 数据集上最先进的方法的性能比较。}%最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
     \centering
     \begin{tabular}{cccc}
     \toprule 
@@ -261,7 +265,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 
 \begin{table*}[htbp] %[!ht]
 % \small
-  \caption{与 THU-READ 数据集上最先进的方法的性能比较。最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
+  \caption{与 THU-READ 数据集上最先进的方法的性能比较。}%最佳和第二佳方法通过 \textbf{加粗} 和 \underline{下划线}标注。}
     \centering
     \begin{tabular}{cccc}
     \toprule 
@@ -377,7 +381,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \begin{table*}
     \small
     \centering
-  \caption{SIN 组件的消融研究：语义过滤器 (SF) 和语义标签平滑 (SLS)。 SF$_n$ 表示使用 $n$ 个语义过滤器混合一个视觉特征（SF$_0$ 表示视觉过滤器是随机初始化的，没有集成语义过滤器）。}
+  \caption{SIN 组件的消融研究：语义过滤器（SF）和语义标签平滑（SLS）。}% SF$_n$ 表示使用 $n$ 个语义过滤器混合一个视觉特征（SF$_0$ 表示视觉过滤器是随机初始化的，没有集成语义过滤器）。}
   \begin{tabular}{cccccc}
     \toprule
     {Variants}& {SLS} &{SF} &{FilterNum} & {Accuracy(\%)} \\
@@ -405,7 +409,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 本文设计了三种 SF 模式：1）$\text{SF}_1$，其中每个视觉特征都与相应的单个语义特征集成；2）$\text{SF}_b$，其中每个视觉特征都与其批次对应的 $b$ 个语义特征集成；3）$\text{SF}_N$，其中每个视觉特征都与所有类别的 $N$ 个语义特征集成。
 如表~\ref{tab:sin} 所示，将过滤器的数量从 1 增加到 16 再增加到 249，分别带来了 0.07\% 的改进。
 这一趋势表明，语义过滤器的数量越多，集成的语义信息就越丰富，从而更有效地增强了视觉网络的性能。
-此外，本文的研究结果表明，当过滤器随机初始化时（如在 SF$_0$ 设置中），与集成语义信息的过滤器相比，识别性能下降了 0.52\%。这一观察进一步强调了整合语义信息的必要性和有效性。
+此外，本文的研究结果表明，当视觉过滤器随机初始化时（如在 $\text{SF}_0$ 设置中），与集成语义信息的过滤器相比，识别性能下降了 0.52\%。这一观察进一步强调了整合语义信息的必要性和有效性。
 % 本节中提出的结果来自 MDSI-CNN。
 
 \subsubsection{参数评估}
@@ -417,7 +421,7 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 \begin{table*}
     \small
     \centering
-  \caption{每个子模块的可训练参数，其中 MDSI 的总参数被\textbf{加粗}。 “Trans.”表示 Transformer。}
+  \caption{每个子模块的可训练参数（MDSI 的总参数被\textbf{加粗}）。}
   \begin{tabular}{cccc}
     \toprule
     \multirow{2}*{Networks} & \multirow{2}*{Modules} & \multicolumn{2}{c}{Params (M)} \\
@@ -439,25 +443,25 @@ THU-READ 数据集 \cite{tang2017action} 包含 1920 个 RGB-D 自我中心手�
 
 \begin{figure}
   \centering
-  \subcaptionbox{\label{fig:tSNEa}}
+  \subcaptionbox{基础模型的特征分布可视化\label{fig:tSNEa}}
     {\includegraphics[width=0.42\linewidth]{t-SNE_68.55.png}}
-  \subcaptionbox{\label{fig:tSNEb}}
+  \subcaptionbox{MDSI 的特征分布可视化\label{fig:tSNEb}}
     {\includegraphics[width=0.42\linewidth]{t-SNE_75.07.png}}
-  \subcaptionbox{\label{fig:confuse_base}}
+  \subcaptionbox{基础模型的混淆矩阵\label{fig:confuse_base}}
     {\includegraphics[width=0.49\linewidth]{confusion_matrix_59.85_spec.png}}
-  \subcaptionbox{\label{fig:confuse_ours}}
+  \subcaptionbox{MDSI 的混淆矩阵\label{fig:confuse_ours}}
     {\includegraphics[width=0.49\linewidth]{confusion_matrix_75.07_spec.png}}
-  \caption{可视化本文方法的增强效果。 (a) 基础模型的特征分布可视化。(b) MDSI 的特征分布可视化。(c) 基础模型的混淆矩阵。(d) MDSI 的混淆矩阵。}
+  \caption{可视化本文方法的增强效果。}
   \label{fig:vis}
 \end{figure}
 
 \begin{figure}
   \centering
-  \subcaptionbox{\label{fig:comp_gap}}
+  \subcaptionbox{IR 场景下的性能改进（对应图 ~\ref{fig:gap_sample}）\label{fig:comp_gap}}
     {\includegraphics[width=0.49\linewidth]{comp_gap.pdf}}
-  \subcaptionbox{\label{fig:comp_sim}}
+  \subcaptionbox{IA 场景下的性能改进（对应图 ~\ref{fig:sim_sample}）\label{fig:comp_sim}}
     {\includegraphics[width=0.49\linewidth]{comp_similar.pdf}}
-  \caption{MDSI 在解决信息冗余 (IR) 和信息缺失 (IA) 挑战方面的增强效果。 (a) IR 场景下的性能改进（对应于图 ~\ref{fig:gap_sample} 中的样本）。 (b) IA 场景下的性能改进。（对应于图 ~\ref{fig:sim_sample} 中的样本）}
+  \caption{MDSI 在解决信息冗余（IR）和信息缺失（IA）挑战方面的增强效果。}
   \label{fig:comp}
 \end{figure}
 

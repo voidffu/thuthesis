@@ -93,7 +93,7 @@
 基于模板的方法（Template based）\cite{crowley1995finger}与手部检测方法非常相似。此类方法在前一帧中检测到手的空间附近调用手检测器，从而在很大程度上限制图像搜索空间，但要求图像具有足够的采样帧率。基于最佳估计的方法（Optimal estimation）\cite{argyros2004real}采用卡尔曼滤波器\cite{kalman1960new}提供的最优估计框架具有实时的性能并能为连续帧提供预测。基于粒子过滤（Particle filtering）的方法\cite{perez2002color}被用来在密集的视觉混乱中跟踪手的位置和手指的配置，此类方法用一组粒子建模手的位置，对于复杂的模型需要更多的粒子。
 基于连续自适应均值偏移（CamShift）的方法\cite{wang2010study}参考了基于核的mean shift算法原理，它通过迭代计算来寻找目标的分布中心，并可动态调整跟踪窗口尺寸，实现对目标的自适应跟踪。
 CamShift具有轻量、鲁棒、高效的优点，但在复杂场景中容易失败、且容易发生窗口漂移问题。
-识别阶段的目标是对手的位置、姿势提供最终的语义解释。静态手势识别可以使用模板匹配或基于机器学习的简单分类器\cite{基于视觉的动态手势识别研究综述}，如：支持向量机（Support Vector Machine，SVM）\cite{burges1998tutorial}、随机森林\cite{基于视觉的动态手势识别研究综述}、K近邻算法（K-Nearest Neighbors，KNN）\cite{thirumuruganathan2010knn}等。动态手势识别则需要对时间维度进行建模，隐马尔科夫模型（Hidden Markov Model，HMM）\cite{liang1996sign}，动态时间规整（Dynamic Time Warping，DTW）\cite{corradini2001dynamic}，时延神经网络\cite{sigal2004skin}等算法在动态手势识别系统中得到了广泛的应用。
+识别阶段的目标是对手的位置、姿势提供最终的语义解释。静态手势识别可以使用模板匹配或基于机器学习的方法\cite{基于视觉的动态手势识别研究综述}，如：支持向量机（Support Vector Machine，SVM）\cite{burges1998tutorial}、随机森林\cite{基于视觉的动态手势识别研究综述}、K近邻算法（K-Nearest Neighbors，KNN）\cite{thirumuruganathan2010knn}等。动态手势识别则需要对时间维度进行建模，隐马尔科夫模型（Hidden Markov Model，HMM）\cite{liang1996sign}、时延神经网络\cite{sigal2004skin}、动态时间规整（Dynamic Time Warping，DTW）\cite{corradini2001dynamic}等算法在动态手势识别系统中得到了广泛的应用。
 传统手势识别方法的关键在于如何合理地提取手工特征，具有计算成本低、速度快的优势。但由于过于依赖于技术人员经验与精巧的模型设计，算法的泛化性、鲁棒性往往较差。
 
 \subsubsection{基于深度学习的手势识别方法} % （时空建模）
@@ -104,7 +104,7 @@ CamShift具有轻量、鲁棒、高效的优点，但在复杂场景中容易失
 % ref: 基于视觉的实时手势识别方法（2019大连理工）
 % RGB
 %% 2DCNN
-卷积神经网络（Convolutional Neural Network，CNN）已被证明是许多计算机视觉任务中的有效算法，它利用局部感受野、参数共享和降采样机制来提取图像特征。CNN主要由三类层次构成:卷积层负责特征提取，池化层实现特征压缩，全连接层完成特征映射。这种结构设计使CNN在计算机视觉领域获得了广泛应用。2DCNN方法被广泛用于处理静态手势图像的分类和识别任务。%这些网络通过卷积层和池化层有效地捕获图像中的空间特征。
+卷积神经网络（Convolutional Neural Network，CNN）已在多种视觉任务中取得了出色性能，它利用局部感受野、参数共享和降采样机制来提取图像特征。CNN主要由三类层次构成:卷积层负责特征提取，池化层实现特征压缩，全连接层完成特征映射。这种结构设计使CNN在计算机视觉领域获得了广泛应用。2DCNN方法被广泛用于处理静态手势图像的分类和识别任务。%这些网络通过卷积层和池化层有效地捕获图像中的空间特征。
 %% Two stream
 针对视频中的动态手势动作，早期研究者试图在时域中扩展 2DCNN 的连接性以进行视频分类\cite{karpathy2014large}。Simonyan等人\cite{simonyan2014twostream}提出了双流神经网络（Two Stream CNN）来分别学习空间和时间特征，其中空间流处理静态单帧图像，时间流则处理多帧光流。
 TSN\cite{wang2016tsn}在双流卷积神经网络的基础上进行稀疏时间采样，所提出的时间段网络可以对整个动作视频进行高效的学习。
@@ -131,7 +131,7 @@ Zhang等人提出了Deformable 3DCNN\cite{zhang2020deformable3d}，通过所设�
 3DCNN能够有效提取视频中的局部时空特征，但对长序列数据的建模能力较弱。此外，当网络输入较长时，往往需要更多层或更大的内核和步幅大小，增加了网络计算成本的同时也容易出现过拟合现象。
 
 %% Recurrent
-循环神经网络（Recurrent Neural Network，RNN）\cite{jozefowicz2015empirical}和长短期记忆网络（Long Short-Term Memory，LSTM）\cite{yue2015beyond}在序列数据处理中得到广泛应用。
+循环神经网络（Recurrent Neural Network，RNN）\cite{jozefowicz2015empirical}和长短期记忆网络（Long Short-Term Memory，LSTM）\cite{yue2015beyond}能够有效处理序列数据。
 这一特点促使研究人员将 CNN 和 RNN/LSTM 的优势结合起来，先后学习局部和全局特征。
 长期循环卷积网络（LRCN）\cite{donahue2015lrcn}结合CNN和LSTM分别处理空间与时间特征，所提出的方法在动作识别、图像描述与视频描述多任务中取得了有竞争力的结果。
 Molchanov\cite{molchanov2016online}和Cao\cite{cao2017egocentric}等人分别将3DCNN与循环神经网络（RNN）和长短期记忆网络（LSTM）相结合以进行端到端的手势识别，前者可以从多模态数据中同时检测和分类动态手势，后者针对自我中心手势识别任务，引入了一个循环时空转换模型，实现了3D特征的时空规范化。

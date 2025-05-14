@@ -3,7 +3,7 @@
 % \chapter{研究方法}
 \chapter{基于多模态的动态手势识别算法}
 \label{sec:GR}
-针对手语教学中的动作评估挑战，本章对基于多模态的动态手势识别算法进行了研究。
+针对手语教学中的动作评估挑战，本章对基于多模态的动态手势识别算法展开研究。
 为了解决动态手势识别中“信息冗余（Information Redundancy，IR）”和 “信息缺失（Information Absence，IA）”的问题，如图~\ref{fig:MDSI} 所示，本文提出了一种用于 RGB-D 手势识别的新型可插拔方法，称为多策略解耦和语义集成网络 (Multi-strategy Decoupling with Semantic Integration Network，MDSI)。所提出的可插拔式 MDSI 方法的总体框架如图 \ref{fig:MDSI} 所示。为了解决信息冗余 (IR) 问题，本文引入了多策略解耦网络 (Multi-strategy Decoupling Network，MDN)，通过“姿势-运动”和“空间-时间-通道”解耦来强调不同尺度与不同维度的特征信息 (第~\ref{sec:MDN}节)。
 为了解决信息缺失 (IA) 问题，本文提出了一个语义集成网络 (Semantic Integration Network，SIN)，它有两个关键组件：语义滤波器 (Semantic Filter，SF) 和语义标签平滑 (Semantic Label Smoothing，SLS)，通过自然语言建模补充手势识别中缺失的信息 (第~\ref{sec:SIN}节)。
 所提出的方法在 IsoGD 和 THU-READ 两个大规模基准数据集上取得了先进的识别性能，展现了其在实际应用中的潜力。
